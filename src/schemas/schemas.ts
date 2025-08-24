@@ -13,7 +13,7 @@ export const SkillLevelEnum = z.enum(['Beginner', 'Intermediate', 'Advanced', 'E
 export const SkillTypeEnum = z.enum(['Technical', 'Soft', 'Language', 'Other']);
 
 export const AboutSchema = z.object({
-  profilePic: z.string().url().optional(),
+  profilePic: z.file().max(5000000).mime(['image/jpeg', 'image/png']),
   fName: z.string().min(1, 'First name is required').max(50),
   lName: z.string().min(1, 'Last name is required').max(50),
   city: z.string().min(1).max(50).optional(),
