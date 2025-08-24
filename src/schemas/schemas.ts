@@ -87,11 +87,11 @@ export const ResumeSchema = z.object({
   projects: z.array(ProjectSchema).optional(),
 });
 
-export type About = z.infer<typeof AboutSchema>;
-export type Contact = z.infer<typeof ContactSchema>;
-export type Experience = z.infer<typeof ExperienceSchema>;
-export type Education = z.infer<typeof EducationSchema>;
-export type Skill = z.infer<typeof SkillSchema>;
-export type Project = z.infer<typeof ProjectSchema>;
-export type Resume = z.infer<typeof ResumeSchema>;
-export type Platform = z.infer<typeof PlatformEnum>;
+export type AboutType = z.infer<typeof AboutSchema>;
+export type ContactType = z.infer<typeof ContactSchema>;
+export type ExperienceType = z.infer<typeof ExperienceSchema>;
+export type EducationType = z.infer<typeof EducationSchema>;
+export type SkillType = z.infer<typeof SkillSchema>;
+export type ProjectType = z.infer<typeof ProjectSchema>;
+export type ResumeType = z.infer<typeof ResumeSchema>;
+export type PlatformType = z.infer<typeof PlatformEnum>;
