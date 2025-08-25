@@ -13,10 +13,23 @@ export interface ResumeContextType {
 export const ResumeContext = createContext<ResumeContextType>({});
 
 function App() {
-  const [resumeData, setResumeData] = useState<Partial<ResumeType>>({});
+  const [resumeData, setResumeData] = useState<Partial<ResumeType>>({
+    about: {
+      profilePic: undefined,
+      fName: '',
+      lName: '',
+      city: '',
+      country: '',
+      intro: '',
+    },
+    contact: {
+      email: '',
+      phone: '',
+      socialLinks: [],
+    },
+  });
   console.log('🚀 ~ App ~ resumeData:', resumeData);
 
-  // const updateResumeData = (data) => setResumeData({ ...resumeData, ...data });
   const updateResumeData = (data: Partial<ResumeType>) =>
     setResumeData((prevData) => ({ ...prevData, ...data }));
 

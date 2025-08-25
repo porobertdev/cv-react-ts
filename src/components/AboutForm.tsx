@@ -13,17 +13,14 @@ import { Textarea } from './ui/textarea';
 export default function AboutForm() {
   const { resumeData, updateResumeData } = useContext(ResumeContext);
 
+  const { about } = resumeData;
+
   const [fileSrc, setFileSrc] = useState();
 
   const form = useForm<z.infer<typeof AboutSchema>>({
     resolver: zodResolver(AboutSchema),
     defaultValues: {
-      profilePic: undefined,
-      fName: '',
-      lName: '',
-      city: '',
-      country: '',
-      intro: '',
+      ...about,
     },
     mode: 'onChange',
   });
