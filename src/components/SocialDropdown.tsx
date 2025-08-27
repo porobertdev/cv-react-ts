@@ -1,8 +1,5 @@
 'use client';
 
-import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
-import * as React from 'react';
-
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,36 +10,40 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { CirclePlus } from 'lucide-react';
+import type { SocialLink } from './ContactForm';
 
-export function SocialDropdown(props) {
-  const { socialLinks, updateSocialLinks } = props;
+interface SocialDropdownProps {
+  socialLinks: SocialLink[];
+  updateSocialLinks: (link: SocialLink) => void;
+}
 
+export function SocialDropdown({ socialLinks, updateSocialLinks }: SocialDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="cursor-pointer">
-          {/* <img src={selectedSocialIcon.src} alt="brand logo" /> */}
-          {/* <selectedSocialIcon/> */}
-          {/* <IconComp /> */}
           <CirclePlus />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-max flex">
-        {/* <DropdownMenuLabel>Platform</DropdownMenuLabel> */}
-        {/* <DropdownMenuSeparator /> */}
-
-        {socialLinks.map((link) => {
+      <DropdownMenuContent className="min-w-max flex gap-1">
+        {socialLinks.map((link: SocialLink, index: number) => {
           const IconComp = link.icon;
 
           return (
-            <DropdownMenuItem
-              key={link.name}
-              onSelect={() => {
-                updateSocialLinks(link);
-              }}
-            >
-              <IconComp />
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                key={link.platform}
+                onSelect={() => {
+                  updateSocialLinks(link);
+                }}
+              >
+                <IconComp />
+              </DropdownMenuItem>
+
+              {index < socialLinks.length - 1 && (
+                <DropdownMenuSeparator className="bg-muted h-5 w-[2px]" />
+              )}
+            </>
           );
         })}
       </DropdownMenuContent>

@@ -19,9 +19,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from './ui/button';
-import { Separator } from './ui/separator';
 
-interface SocialLink {
+export interface SocialLink {
   platform: PlatformType;
   icon: LucideIcon;
   url: string;
@@ -76,9 +75,6 @@ export default function AboutForm() {
     replace([...formLinkFields, link]);
   };
 
-  /**
-   * TODO: implement delete
-   */
   const deleteSocialLink = (index: number) => {
     remove(index);
     handleFormChange();
