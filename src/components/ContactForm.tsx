@@ -1,17 +1,14 @@
 import { ResumeContext } from '@/App';
-import { ContactSchema, type ContactType } from '@/schemas/schemas';
+import { ContactSchema, type ContactType, type PlatformType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useContext } from 'react';
+import { useFieldArray, useForm, type FieldArrayWithId } from 'react-hook-form';
 import { z } from 'zod';
 import { SocialDropdown } from './SocialDropdown';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 
-import { link } from 'fs';
-
 import {
-  CirclePlus,
   Facebook,
   Github,
   Globe,
@@ -24,25 +21,30 @@ import {
 import { Button } from './ui/button';
 import { Separator } from './ui/separator';
 
-const platformLinks = [
-  { name: 'Linkedin', icon: Linkedin, url: 'https://www.linkedin.com/in/[username]' },
-  { name: 'Website', icon: Globe, url: 'https://example.com' },
-  { name: 'Github', icon: Github, url: 'https://github.com/[username]' },
-  { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/[username]' },
+interface SocialLink {
+  platform: PlatformType;
+  icon: LucideIcon;
+  url: string;
+}
+
+type SocialLinkField = FieldArrayWithId<ContactType, 'socialLinks', 'id'>;
+
+const socialLinks: SocialLink[] = [
+  { platform: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/[username]' },
+  { platform: 'Website', icon: Globe, url: 'https://example.com' },
+  { platform: 'GitHub', icon: Github, url: 'https://github.com/[username]' },
+  { platform: 'Twitter', icon: Twitter, url: 'https://twitter.com/[username]' },
 
   //   https://www.facebook.com/profile.php?id=61556976400457
-  { name: 'Facebook', icon: Facebook, url: 'https://facebook.com/[username]' },
-  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/[username]' },
+  { platform: 'Facebook', icon: Facebook, url: 'https://facebook.com/[username]' },
+  { platform: 'Instagram', icon: Instagram, url: 'https://instagram.com/[username]' },
 ];
 
 // const socialLinks = PlatformEnum;
 // console.log('🚀 ~ socialLinks:', socialLinks.enum);
 export default function AboutForm() {
   const { resumeData, updateResumeData } = useContext(ResumeContext);
-
   const { contact } = resumeData;
-
-  // const [isInputHovered, setIsInputHovered] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof ContactSchema>>({
     resolver: zodResolver(ContactSchema),
@@ -52,25 +54,34 @@ export default function AboutForm() {
     mode: 'onChange',
   });
 
-  const { fields, replace, remove } = useFieldArray({
+  /*
+  ReactHookForm has built-in API for dealing with inputs that hold arrays. By using this API, we can avoid declaring new states.
+  */
+  const {
+    fields: formLinkFields,
+    replace,
+    remove,
+  } = useFieldArray({
     control: form.control,
     name: 'socialLinks',
   });
-  console.log('🚀 ~ AboutForm ~ fields:', fields);
+  console.log('🚀 ~ AboutForm ~ fields:', formLinkFields);
 
   const handleFormChange = () => {
     updateResumeData({ ...resumeData, contact: form.getValues() });
   };
 
-  const updateSocialLinks = (link) => {
-    replace([...fields, link]);
+  const updateSocialLinks = (link: SocialLink) => {
+    console.log('🚀 ~ updateSocialLinks ~ link:', link);
+    replace([...formLinkFields, link]);
   };
 
   /**
    * TODO: implement delete
    */
-  const deleteSocialLink = (link) => {
-    // setSocialLinks(socialLinks.filter((item) => item.name !== link.name));
+  const deleteSocialLink = (index: number) => {
+    remove(index);
+    handleFormChange();
   };
 
   return (
@@ -129,11 +140,11 @@ export default function AboutForm() {
                   )}
                 </FormLabel>
 
-                {fields.map((link, index) => (
+                {formLinkFields.map((link: SocialLinkField, index) => (
                   <FormField
-                    name={`socialLinks.${link.name}`}
+                    name={`socialLinks.${index}.url`}
                     control={form.control}
-                    key={link.name}
+                    key={link.platform}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl
@@ -143,26 +154,21 @@ export default function AboutForm() {
                         >
                           <div className="flex items-center justify-center">
                             {/* <SocialDropdown /> */}
-                            <Button variant="link" type="button" className='hover:scale-120'>
+                            <Button variant="link" type="button" className="hover:scale-120">
                               <a href={`https://${link.url.split('/')[2]}`} target="_blank">
                                 <link.icon />
                               </a>
                             </Button>
-                            <Input
-                              type="text"
-                              {...field}
-                              placeholder={link.url}
-                              onChange={(e) => {
-                                link.url = e.target.value;
-                                form.setValue(`socialLinks.${index}.url`, e.target.value);
-                              }}
-                            />
+                            <Input type="text" {...field} placeholder={link.url} />
 
-                            {/* {isInputHovered && (
-                              <Button variant="outline" type="button" className="ml-4">
-                                <Trash className="text-destructive cursor-pointer" />
-                              </Button>
-                            )} */}
+                            <Button
+                              variant="outline"
+                              type="button"
+                              className="ml-4"
+                              onClick={() => deleteSocialLink(index)}
+                            >
+                              <Trash className="text-destructive cursor-pointer" />
+                            </Button>
                           </div>
                         </FormControl>
                       </FormItem>
@@ -176,11 +182,11 @@ export default function AboutForm() {
         />
 
         {/* ADD MORE */}
-        {fields.length !== platformLinks.length && (
+        {formLinkFields.length !== socialLinks.length && (
           <div className="flex items-center justify-center">
             <SocialDropdown
-              socialLinks={platformLinks.filter(
-                (platform) => !fields.map((item) => item.name).includes(platform.name),
+              socialLinks={socialLinks.filter(
+                (link) => !formLinkFields.map((item) => item.platform).includes(link.platform),
               )}
               updateSocialLinks={updateSocialLinks}
             />
