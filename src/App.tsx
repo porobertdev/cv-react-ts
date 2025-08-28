@@ -152,6 +152,13 @@ function App() {
         currentlyStudying: false,
       },
     ],
+    skills: [
+      {
+        name: 'React',
+        proficiency: 'Beginner',
+        type: 'Technical',
+      },
+    ],
   });
   console.log('🚀 ~ App ~ resumeData:', resumeData);
 

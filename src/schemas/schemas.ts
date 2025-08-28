@@ -75,7 +75,9 @@ export const EducationSchema = z
     description: z.string().max(1000).optional(),
   })
   .refine(
-    (data) => data.currentlyStudying || (!data.currentlyStudying && data.endDate && data.endDate.length > 0),
+    (data) =>
+      data.currentlyStudying ||
+      (!data.currentlyStudying && data.endDate && data.endDate.length > 0),
     {
       message: 'End date is required unless currently studying',
       path: ['endDate'],
@@ -85,8 +87,8 @@ export const EducationSchema = z
 export const SkillSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().min(1, 'Skill name is required').max(50),
-  proficiency: SkillLevelEnum.optional(),
-  type: SkillTypeEnum.optional(),
+  proficiency: SkillLevelEnum,
+  type: SkillTypeEnum,
 });
 
 export const ProjectSchema = z.object({
