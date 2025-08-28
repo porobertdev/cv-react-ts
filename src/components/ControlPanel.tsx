@@ -24,7 +24,7 @@ export default function ControlPanel(props) {
     <Card className="h-max">
       <CardHeader />
       <CardContent>
-        <Tabs defaultValue="contact">
+        <Tabs defaultValue="experience">
           <TabsList className="mb-8">
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="contact">Contact</TabsTrigger>

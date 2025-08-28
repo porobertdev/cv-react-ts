@@ -39,14 +39,28 @@ export const ContactSchema = z.object({
 });
 
 export const ExperienceSchema = z.object({
-  id: z.string().uuid().optional(),
-  jobTitle: z.string().min(1, 'Job title is required').max(100),
-  company: z.string().min(1, 'Company name is required').max(100),
-  location: z.string().min(1).max(100).optional(),
-  startDate: z.date().min(new Date('1900-01-01'), 'Start date is required'),
-  endDate: z.string().optional(),
-  isCurrent: z.boolean().optional(),
-  description: z.string().max(1000).optional(),
+  jobs: z.array(
+    z
+      .object({
+        id: z.string().optional(),
+        jobTitle: z.string().min(1, 'Job title is required'),
+        company: z.string().min(1, 'Company is required'),
+        location: z.string().min(1, 'Location is required'),
+        startDate: z.string().min(1, 'Start date is required'),
+        endDate: z.string().optional(),
+        description: z.string().min(1, 'Description is required'),
+        currentlyWorking: z.boolean().default(false),
+      })
+      .refine(
+        (data) =>
+          data.currentlyWorking ||
+          (!data.currentlyWorking && data.endDate && data.endDate.length > 0),
+        {
+          message: 'End date is required unless currently working',
+          path: ['endDate'],
+        },
+      ),
+  ),
 });
 
 export const EducationSchema = z.object({
@@ -81,7 +95,7 @@ export const ProjectSchema = z.object({
 export const ResumeSchema = z.object({
   about: AboutSchema,
   contact: ContactSchema.optional(),
-  experiences: z.array(ExperienceSchema).optional(),
+  experience: ExperienceSchema,
   education: z.array(EducationSchema).optional(),
   skills: z.array(SkillSchema).optional(),
   projects: z.array(ProjectSchema).optional(),
@@ -89,7 +103,7 @@ export const ResumeSchema = z.object({
 
 export type AboutType = z.infer<typeof AboutSchema>;
 export type ContactType = z.infer<typeof ContactSchema>;
-export type ExperienceType = z.infer<typeof ExperienceSchema>;
+export type ExperienceType = z.infer<typeof ExperienceSchema.shape.jobs.element>;
 export type EducationType = z.infer<typeof EducationSchema>;
 export type SkillType = z.infer<typeof SkillSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
