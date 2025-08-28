@@ -141,6 +141,17 @@ function App() {
         },
       ],
     },
+    education: [
+      {
+        institution: 'The Almighty University',
+        degree: 'graduate',
+        fieldOfStudy: 'IT',
+        startDate: '2020-07-19',
+        endDate: '2024-06-10',
+        description: 'Very cool university.',
+        currentlyStudying: false,
+      },
+    ],
   });
   console.log('🚀 ~ App ~ resumeData:', resumeData);
 

@@ -63,16 +63,24 @@ export const ExperienceSchema = z.object({
   ),
 });
 
-export const EducationSchema = z.object({
-  id: z.string().uuid().optional(),
-  institution: z.string().min(1, 'Institution name is required').max(100),
-  degree: z.string().min(1, 'Degree is required').max(100),
-  fieldOfStudy: z.string().min(1, 'Field of study is required').max(100),
-  startDate: z.date().min(new Date('1900-01-01'), 'Start date is required'),
-  endDate: z.string().optional(),
-  isCurrent: z.boolean().optional(),
-  description: z.string().max(1000).optional(),
-});
+export const EducationSchema = z
+  .object({
+    id: z.string().uuid().optional(),
+    institution: z.string().min(1, 'Institution name is required').max(100),
+    degree: z.string().min(1, 'Degree is required').max(100),
+    fieldOfStudy: z.string().min(1, 'Field of study is required').max(100),
+    startDate: z.string().min(1, 'Start date is required'),
+    endDate: z.string().optional(),
+    currentlyStudying: z.boolean().optional(),
+    description: z.string().max(1000).optional(),
+  })
+  .refine(
+    (data) => data.currentlyStudying || (!data.currentlyStudying && data.endDate && data.endDate.length > 0),
+    {
+      message: 'End date is required unless currently studying',
+      path: ['endDate'],
+    },
+  );
 
 export const SkillSchema = z.object({
   id: z.string().uuid().optional(),
