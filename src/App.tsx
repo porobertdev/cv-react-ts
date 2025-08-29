@@ -159,6 +159,18 @@ function App() {
         type: 'Technical',
       },
     ],
+    projects: [
+      {
+        name: 'Resume Builder',
+        description:
+          'A plain web app that can generate resumes featuring templates, live preview and an intuitive interface.',
+        links: {
+          git: 'https://github.com/porobertdev/cv-odin-react-ts',
+          live: 'https://resumebuilder.porobert.dev',
+        },
+        technologies: ['React', 'TypeScript', 'Shadcn/ui', 'React Hook Form'],
+      },
+    ],
   });
   console.log('🚀 ~ App ~ resumeData:', resumeData);
 

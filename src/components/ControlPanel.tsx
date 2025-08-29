@@ -21,10 +21,10 @@ export default function ControlPanel(props) {
         <AboutForm />
       </SidebarContent>
     </Sidebar> */
-    <Card className="h-max">
+    <Card className="h-max w-1/2.5">
       <CardHeader />
       <CardContent>
-        <Tabs defaultValue="skills">
+        <Tabs defaultValue="projects">
           <TabsList className="mb-8">
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="contact">Contact</TabsTrigger>

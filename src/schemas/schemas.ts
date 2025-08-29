@@ -94,7 +94,7 @@ export const SkillSchema = z.object({
 export const ProjectSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().min(1, 'Project name is required').max(100),
-  description: z.string().max(1000).optional(),
+  description: z.string().min(20).max(1000).optional(),
   links: z.object({
     live: z.string().url().optional(),
     git: z.string().url().optional(),
