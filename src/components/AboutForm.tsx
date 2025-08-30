@@ -83,7 +83,6 @@ export default function AboutForm() {
           }}
         />
 
-        <div className="flex gap-4">
           <FormField
             name="fName"
             control={form.control}
@@ -120,9 +119,7 @@ export default function AboutForm() {
               </FormItem>
             )}
           />
-        </div>
 
-        <div className="flex gap-4">
           <FormField
             name="city"
             control={form.control}
@@ -159,7 +156,6 @@ export default function AboutForm() {
               </FormItem>
             )}
           />
-        </div>
 
         <FormField
           name="intro"
@@ -173,7 +169,7 @@ export default function AboutForm() {
                 )}
               </FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea rows={5} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

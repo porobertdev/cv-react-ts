@@ -330,7 +330,7 @@ export default function EducationForm() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea {...field} value={field.value || ''} />
+                      <Textarea rows={5} {...field} value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

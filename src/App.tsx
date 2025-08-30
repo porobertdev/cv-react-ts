@@ -180,7 +180,7 @@ function App() {
   return (
     <ResumeContext.Provider value={{ resumeData, updateResumeData }}>
       <Toaster position="top-center" />
-      <SidebarProvider>
+      <SidebarProvider className='w-1/3 h-screen'>
         <ControlPanel />
       </SidebarProvider>
     </ResumeContext.Provider>

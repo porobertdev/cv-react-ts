@@ -322,7 +322,7 @@ export default function ExperienceForm() {
                       Description <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea rows={5} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

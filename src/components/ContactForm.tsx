@@ -83,7 +83,6 @@ export default function AboutForm() {
   return (
     <Form {...form}>
       <form onChange={handleFormChange} className="flex flex-col gap-6">
-        <div className="flex gap-4">
           <FormField
             name="email"
             control={form.control}
@@ -120,7 +119,6 @@ export default function AboutForm() {
               </FormItem>
             )}
           />
-        </div>
 
         <FormField
           name="socialLinks"
