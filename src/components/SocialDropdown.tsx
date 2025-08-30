@@ -18,6 +18,7 @@ interface SocialDropdownProps {
 }
 
 export function SocialDropdown({ socialLinks, updateSocialLinks }: SocialDropdownProps) {
+  console.log("🚀 ~ SocialDropdown ~ socialLinks:", socialLinks)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,7 +38,7 @@ export function SocialDropdown({ socialLinks, updateSocialLinks }: SocialDropdow
                   updateSocialLinks(link);
                 }}
               >
-                <IconComp />
+                {IconComp}
               </DropdownMenuItem>
 
               {index < socialLinks.length - 1 && (

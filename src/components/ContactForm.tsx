@@ -1,7 +1,7 @@
 import { ResumeContext } from '@/App';
 import { ContactSchema, type ContactType, type PlatformType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext } from 'react';
+import { useContext, type ReactNode } from 'react';
 import { useFieldArray, useForm, type FieldArrayWithId } from 'react-hook-form';
 import { z } from 'zod';
 import { SocialDropdown } from './SocialDropdown';
@@ -22,21 +22,22 @@ import { Button } from './ui/button';
 
 export interface SocialLink {
   platform: PlatformType;
-  icon: LucideIcon;
+  icon: ReactNode;
   url: string;
 }
 
 type SocialLinkField = FieldArrayWithId<ContactType, 'socialLinks', 'id'>;
 
+// TODO: refactor
 const socialLinks: SocialLink[] = [
-  { platform: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/[username]' },
-  { platform: 'Website', icon: Globe, url: 'https://example.com' },
-  { platform: 'GitHub', icon: Github, url: 'https://github.com/[username]' },
-  { platform: 'Twitter', icon: Twitter, url: 'https://twitter.com/[username]' },
+  { platform: 'LinkedIn', icon: <Linkedin />, url: 'https://www.linkedin.com/in/[username]' },
+  { platform: 'Website', icon: <Globe />, url: 'https://example.com' },
+  { platform: 'GitHub', icon: <Github />, url: 'https://github.com/[username]' },
+  { platform: 'Twitter', icon: <Twitter />, url: 'https://twitter.com/[username]' },
 
   //   https://www.facebook.com/profile.php?id=61556976400457
-  { platform: 'Facebook', icon: Facebook, url: 'https://facebook.com/[username]' },
-  { platform: 'Instagram', icon: Instagram, url: 'https://instagram.com/[username]' },
+  { platform: 'Facebook', icon: <Facebook />, url: 'https://facebook.com/[username]' },
+  { platform: 'Instagram', icon: <Instagram />, url: 'https://instagram.com/[username]' },
 ];
 
 // const socialLinks = PlatformEnum;
@@ -83,42 +84,42 @@ export default function AboutForm() {
   return (
     <Form {...form}>
       <form onChange={handleFormChange} className="flex flex-col gap-6">
-          <FormField
-            name="email"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Email
-                  {!ContactSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="phone"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Phone
-                  {!ContactSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="tel" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          name="email"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Email
+                {!ContactSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="phone"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Phone
+                {!ContactSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="tel" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           name="socialLinks"
@@ -150,7 +151,11 @@ export default function AboutForm() {
                             {/* <SocialDropdown /> */}
                             <Button variant="link" type="button" className="hover:scale-120">
                               <a href={`https://${link.url.split('/')[2]}`} target="_blank">
-                                <link.icon />
+                                {/* find & render icon */}
+                                {
+                                  socialLinks.filter((item) => item.platform === link.platform)[0]
+                                    .icon
+                                }
                               </a>
                             </Button>
                             <Input type="text" {...field} placeholder={link.url} />
@@ -179,9 +184,16 @@ export default function AboutForm() {
         {formLinkFields.length !== socialLinks.length && (
           <div className="flex items-center justify-center">
             <SocialDropdown
-              socialLinks={socialLinks.filter(
-                (link) => !formLinkFields.map((item) => item.platform).includes(link.platform),
-              )}
+              socialLinks={socialLinks
+                .filter(
+                  (link) => !formLinkFields.map((item) => item.platform).includes(link.platform),
+                )
+                .map((link) => {
+                  return {
+                    ...link,
+                    icon: socialLinks.filter((item) => item.platform === link.platform)[0].icon,
+                  };
+                })}
               updateSocialLinks={updateSocialLinks}
             />
           </div>
