@@ -13,11 +13,14 @@ export const SkillLevelEnum = z.enum(['Beginner', 'Intermediate', 'Advanced', 'E
 export const SkillTypeEnum = z.enum(['Technical', 'Soft', 'Language', 'Other']);
 
 export const AboutSchema = z.object({
-  profilePic: z.file().max(5000000).mime(['image/jpeg', 'image/png']).optional(),
+  profilePic: z
+    .union([z.file().max(5000000).mime(['image/jpeg', 'image/png']), z.string().url()])
+    .optional(),
   fName: z.string().min(1, 'First name is required').max(50),
   lName: z.string().min(1, 'Last name is required').max(50),
   city: z.string().min(1).max(50).optional(),
   country: z.string().min(1).max(50).optional(),
+  position: z.string().min(1).max(50).optional(),
   intro: z.string().min(1).max(300).optional(),
 });
 

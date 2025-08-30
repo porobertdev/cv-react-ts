@@ -66,6 +66,7 @@ export default function AboutForm() {
                         const src = URL.createObjectURL(file);
                         console.log('🚀 ~ AboutForm ~ src:', src);
                         setFileSrc(src);
+                        form.setValue('profilePic', src);
 
                         console.log('🚀 ~ AboutForm ~ form:', form.getValues());
                       }}
@@ -83,79 +84,98 @@ export default function AboutForm() {
           }}
         />
 
-          <FormField
-            name="fName"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  First Name{' '}
-                  {!AboutSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="lName"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Last Name{' '}
-                  {!AboutSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          name="fName"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                First Name{' '}
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="lName"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Last Name{' '}
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            name="city"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  City
-                  {!AboutSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="country"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Country{' '}
-                  {!AboutSchema.shape[field.name].safeParse(undefined).success && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          name="city"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                City
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="country"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Country{' '}
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="position"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Position
+                {AboutSchema.shape[field.name].safeParse(undefined).success && (
+                  <span className="text-destructive">*</span>
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           name="intro"
