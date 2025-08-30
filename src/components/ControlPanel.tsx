@@ -42,7 +42,12 @@ export default function ControlPanel(props) {
         <AboutForm />
       </SidebarContent>
     </Sidebar> */
-    <Tabs defaultValue="about" orientation="vertical" className="w-full">
+    <Tabs
+      defaultValue="about"
+      orientation="vertical"
+      className="w-full"
+      //  activationMode='automatic'
+    >
       <div className="flex gap-8  h-max">
         <TabsList className="mb-8 flex-col justify-center  gap-6 bg-white h-max">
           {tabItems.map(({ value, label, icon }) => (

@@ -106,9 +106,9 @@ export const ProjectSchema = z.object({
 });
 
 export const ResumeSchema = z.object({
-  about: AboutSchema,
+  about: AboutSchema.optional(),
   contact: ContactSchema.optional(),
-  experience: ExperienceSchema,
+  experience: ExperienceSchema.optional(),
   education: z.array(EducationSchema).optional(),
   skills: z.array(SkillSchema).optional(),
   projects: z.array(ProjectSchema).optional(),

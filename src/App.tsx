@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import './App.css';
 import ControlPanel from './components/ControlPanel';
+import ResumePreview from './components/ResumePreview';
 import { SidebarProvider } from './components/ui/sidebar';
 import { Toaster } from './components/ui/sonner';
 import type { ResumeType } from './schemas/schemas';
@@ -15,11 +16,12 @@ export const ResumeContext = createContext<ResumeContextType>({});
 function App() {
   const [resumeData, setResumeData] = useState<Partial<ResumeType>>({
     about: {
-      profilePic: undefined,
+      profilePic: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       fName: 'Jane',
       lName: 'Doe',
       city: 'Berlin',
       country: 'Germany',
+      position: 'Full-Stack Developer',
       intro: 'A passionate full-stack developer with a love for clean code and intuitive UI.',
     },
     contact: {
@@ -143,9 +145,12 @@ function App() {
   return (
     <ResumeContext.Provider value={{ resumeData, updateResumeData }}>
       <Toaster position="top-center" />
-      <SidebarProvider className="w-1/3 h-screen">
-        <ControlPanel />
-      </SidebarProvider>
+      <div className="flex gap-16 justify-start w-screen">
+        <SidebarProvider className="w-[55%] h-screen">
+          <ControlPanel />
+        </SidebarProvider>
+        <ResumePreview />
+      </div>
     </ResumeContext.Provider>
   );
 }
