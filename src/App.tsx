@@ -145,8 +145,8 @@ function App() {
   return (
     <ResumeContext.Provider value={{ resumeData, updateResumeData }}>
       <Toaster position="top-center" />
-      <div className="flex gap-16 justify-start w-screen">
-        <SidebarProvider className="w-[55%] h-screen">
+      <div className="flex gap-4 justify-start w-screen fixed top-8">
+        <SidebarProvider className="w-1/2 h-screen">
           <ControlPanel />
         </SidebarProvider>
         <ResumePreview />

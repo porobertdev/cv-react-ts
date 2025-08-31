@@ -9,6 +9,7 @@ import ExperienceForm from './ExperienceForm';
 import ProjectsForm from './ProjectsForm';
 import SkillsForm from './SkillsForm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Sidebar, SidebarContent, SidebarHeader } from './ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -44,12 +45,12 @@ export default function ControlPanel(props) {
     </Sidebar> */
     <Tabs
       defaultValue="about"
-      orientation="vertical"
+      orientation="horizontal"
       className="w-full"
       //  activationMode='automatic'
     >
-      <div className="flex gap-8  h-max">
-        <TabsList className="mb-8 flex-col justify-center  gap-6 bg-white h-max">
+      <div className="flex flex-col gap-8 h-screen">
+        <TabsList className="px-4 py-2 shadow-sm justify-center  gap-6 bg-white h-max">
           {tabItems.map(({ value, label, icon }) => (
             <TabsTrigger
               key={value}
@@ -67,42 +68,44 @@ export default function ControlPanel(props) {
         </TabsList>
 
         {/* TAB CONTENT */}
-        <Card className="h-max w-full">
+        <Card className="w-full">
           {/* <CardHeader>
           </CardHeader> */}
-          <CardContent>
-            <TabsContent value="about">
-              <CardTitle className="text-3xl text-left mb-4">About</CardTitle>
-              <Separator className="mb-8" />
-              <AboutForm />
-            </TabsContent>
-            <TabsContent value="contact">
-              <CardTitle className="text-3xl text-left mb-4">Contact</CardTitle>
-              <Separator className="mb-8" />
-              <ContactForm />
-            </TabsContent>
-            <TabsContent value="experience">
-              <CardTitle className="text-3xl text-left mb-4">Experience</CardTitle>
-              <Separator className="mb-8" />
+          <ScrollArea>
+            <CardContent className="h-[30rem]">
+              <TabsContent value="about">
+                <CardTitle className="text-3xl text-left mb-4">About</CardTitle>
+                <Separator className="mb-8" />
+                <AboutForm />
+              </TabsContent>
+              <TabsContent value="contact">
+                <CardTitle className="text-3xl text-left mb-4">Contact</CardTitle>
+                <Separator className="mb-8" />
+                <ContactForm />
+              </TabsContent>
+              <TabsContent value="experience">
+                <CardTitle className="text-3xl text-left mb-4">Experience</CardTitle>
+                <Separator className="mb-8" />
 
-              <ExperienceForm />
-            </TabsContent>
-            <TabsContent value="education">
-              <CardTitle className="text-3xl text-left mb-4">Education</CardTitle>
-              <Separator className="mb-8" />
-              <EducationForm />
-            </TabsContent>
-            <TabsContent value="skills">
-              <CardTitle className="text-3xl text-left mb-4">Skills</CardTitle>
-              <Separator className="mb-8" />
-              <SkillsForm />
-            </TabsContent>
-            <TabsContent value="projects">
-              <CardTitle className="text-3xl text-left mb-4">Projects</CardTitle>
-              <Separator className="mb-8" />
-              <ProjectsForm />
-            </TabsContent>
-          </CardContent>
+                <ExperienceForm />
+              </TabsContent>
+              <TabsContent value="education">
+                <CardTitle className="text-3xl text-left mb-4">Education</CardTitle>
+                <Separator className="mb-8" />
+                <EducationForm />
+              </TabsContent>
+              <TabsContent value="skills">
+                <CardTitle className="text-3xl text-left mb-4">Skills</CardTitle>
+                <Separator className="mb-8" />
+                <SkillsForm />
+              </TabsContent>
+              <TabsContent value="projects">
+                <CardTitle className="text-3xl text-left mb-4">Projects</CardTitle>
+                <Separator className="mb-8" />
+                <ProjectsForm />
+              </TabsContent>
+            </CardContent>
+          </ScrollArea>
         </Card>
       </div>
     </Tabs>
