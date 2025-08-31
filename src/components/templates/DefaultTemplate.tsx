@@ -4,6 +4,7 @@ import { Separator } from '../ui/separator';
 
 export default function DefaultTemplate(data: ResumeType) {
   const { about, contact, experience, education, skills, projects } = data;
+  console.log('🚀 ~ DefaultTemplate ~ experience:', experience);
 
   return (
     <Card className="p-0 flex-row gap-0 default-template rounded-none">
@@ -90,7 +91,7 @@ export default function DefaultTemplate(data: ResumeType) {
             <h2 className="text-3xl font-bold mb-4">Professional Experience</h2>
 
             <div className="jobs-list flex flex-col gap-8">
-              {experience.jobs.map((job) => (
+              {experience?.map((job) => (
                 <div key={job.jobTitle} className="flex gap-12">
                   <div className="w-1/2 flex flex-col gap-4">
                     <h3 className="text-xl font-bold">{job.jobTitle}</h3>

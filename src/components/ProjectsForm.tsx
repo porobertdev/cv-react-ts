@@ -1,4 +1,3 @@
-import { ResumeContext } from '@/App';
 import {
   Command,
   CommandEmpty,
@@ -8,22 +7,15 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useModalEdit } from '@/contexts/ModalContext';
+import { useResume } from '@/contexts/ResumeContext';
 import { ProjectSchema, type ProjectType, type SkillType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Globe, PlusCircle, Trash } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from './ui/alert-dialog';
+import CardList from './CardList';
+import ModalEdit from './ModalEdit';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardTitle } from './ui/card';
@@ -130,75 +122,59 @@ const popularTechnologies: string[] = [
 ];
 
 export default function ProjectsForm(props) {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const { resumeData, updateResumeData } = useResume();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const { projects } = resumeData;
 
   const form = useForm<ProjectType>({
     defaultValues: {
-      ...(projects ? projects[0] : {}),
+      ...(projects
+        ? projects[0]
+        : {
+            name: '',
+            description: 'aaaaaaa',
+            links: {
+              git: '',
+              live: '',
+            },
+            technologies: [],
+          }),
     },
     resolver: zodResolver(ProjectSchema),
     mode: 'onChange',
   });
 
+  const { handleEdit } = useModalEdit(form, 'projects');
+
   // TODO: use useFieldArray hook?
   const formValues = form.getValues();
+  console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
 
-  const handleSubmit = (data: ProjectType) => {
-    console.log('Project form data:', data);
-    console.log('🚀 ~ ProjectsForm ~ form:', formValues, editIndex);
-
-    if (editIndex !== null) {
-      projects[editIndex] = data;
-    } else {
-      updateResumeData({ projects: [...(projects || []), data] });
-    }
-
-    setIsModalOpen(false);
-    setEditIndex(null);
-
+  const addTechnology = (tech: string) => {
+    // form.setValue('technologies', [...(formValues.technologies || []), tech]);
     form.reset({
       name: '',
-      description: '',
+      description: 'aaaaaaa',
       links: {
         git: '',
         live: '',
       },
       technologies: [],
     });
-  };
 
-  const addTechnology = (tech: string) => {
-    form.setValue('technologies', [...(formValues.technologies || []), tech]);
     console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
+    // setIsEditing(false);
   };
 
-  const editProject = (index: number) => {
+  /* const editProject = (index: number) => {
+    setIsEditing(true);
     const project = projects[index];
     console.log('🚀 ~ editProject ~ project:', project);
     form.reset(project);
     setEditIndex(index);
     setIsModalOpen(true);
-  };
-
-  const deleteProject = (index: number) => {
-    updateResumeData({ projects: [...projects?.filter((proj, i) => i !== index)] });
-
-    form.reset({
-      name: '',
-      description: '',
-      links: {
-        git: '',
-        live: '',
-      },
-      technologies: [],
-    });
-  };
+}; */
 
   return (
     <>
@@ -209,250 +185,214 @@ export default function ProjectsForm(props) {
         <ScrollArea>
           {projects.map((project: ProjectType, index: number) => (
             <div key={project.id || `project-${index}`} className="mb-4">
-              <div className="flex justify-between items-center">
-                <Card
-                  className="px-4 py-2 rounded-sm flex-row justify-between cursor-pointer hover:bg-muted w-full"
-                  onClick={() => editProject(index)}
-                >
-                  <CardContent className="text-sm p-0 flex gap-12 items-center w-full">
-                    <CardTitle className="text-md flex items-center">{project.name}</CardTitle>
-                  </CardContent>
-                </Card>
-
-                <AlertDialog
-                //  open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}
-                >
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" type="button" size="icon" className="ml-4">
-                      <Trash className="text-destructive cursor-pointer" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you sure you want to delete this project entry?
-                      </AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => deleteProject(index)}>
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
+              <CardList
+                {...{
+                  onClick: () => handleEdit(index, form, 'projects'),
+                  title: project.name,
+                  content: <span className="text-xs text-muted-foreground"></span>,
+                  // footer: (
+                  //   <Button variant="ghost" onClick={() => handleEdit(index)}>
+                  //     <Pencil />
+                  //   </Button>
+                  // ),
+                }}
+              />
             </div>
           ))}
         </ScrollArea>
       )}
-      <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <AlertDialogTrigger asChild>
-          <Button size="icon">
-            <PlusCircle />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Add a new project</AlertDialogTitle>
-            <AlertDialogDescription>{/* form */}</AlertDialogDescription>
-          </AlertDialogHeader>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input type="text" {...field} placeholder="YouTube Clone" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+      <ModalEdit
+        formData={{
+          form: form,
+          key: 'projects',
+          resetFields: {
+            name: '',
+            description: '',
+            links: {
+              git: '',
+              live: '',
+            },
+            technologies: [],
+          },
+        }}
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} placeholder="YouTube Clone" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-              {/* DESCRIPTION */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => {
-                  console.log('🚀 ~ field:', field);
+        {/* DESCRIPTION */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => {
+            console.log('🚀 ~ field:', field);
 
-                  return (
+            return (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    rows={5}
+                    {...field}
+                    placeholder="A full-stack project built with React and Express."
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+
+        {/* LINKS */}
+        <FormField
+          control={form.control}
+          name="links"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Links</FormLabel>
+              <FormControl>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    name="links.git"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem className="flex">
+                        <FormLabel>
+                          <GithubIcon size={20} />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            {...field}
+                            placeholder="https://www.github.com/youtube-clone"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="links.live"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem className="flex">
+                        <FormLabel>
+                          {' '}
+                          <Globe size={20} />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            {...field}
+                            placeholder="https://www.youtube-clone.com"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* TECHNOLOGIES */}
+        <FormField
+          control={form.control}
+          name="technologies"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Technologies</FormLabel>
+              <FormControl>
+                <FormField
+                  name="technologies.0"
+                  control={form.control}
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={5}
-                          {...field}
-                          placeholder="A full-stack project built with React and Express."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                        <Card className="bg-muted">
+                          <CardContent className="flex items-center gap-4 max-w-full">
+                            <div className="flex gap-2 flex-wrap">
+                              {formValues.technologies.length > 0 &&
+                                formValues.technologies?.map((tech: string) => (
+                                  <Badge
+                                    //  variant='secondary'
 
-              {/* LINKS */}
-              <FormField
-                control={form.control}
-                name="links"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Links</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-4">
-                        <FormField
-                          name="links.git"
-                          control={form.control}
-                          render={({ field }) => (
-                            <FormItem className="flex">
-                              <FormLabel>
-                                <GithubIcon size={20} />
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  {...field}
-                                  placeholder="https://www.github.com/youtube-clone"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          name="links.live"
-                          control={form.control}
-                          render={({ field }) => (
-                            <FormItem className="flex">
-                              <FormLabel>
-                                {' '}
-                                <Globe size={20} />
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="text"
-                                  {...field}
-                                  placeholder="https://www.youtube-clone.com"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* TECHNOLOGIES */}
-              <FormField
-                control={form.control}
-                name="technologies"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Technologies</FormLabel>
-                    <FormControl>
-                      <FormField
-                        name="technologies.0"
-                        control={form.control}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Card className="bg-muted">
-                                <CardContent className="flex items-center gap-4 max-w-full">
-                                  <div className="flex gap-2 flex-wrap">
-                                    {formValues.technologies.length > 0 &&
-                                      formValues.technologies?.map((tech: string) => (
-                                        <Badge
-                                          //  variant='secondary'
-
-                                          className="py-2 rounded-lg bg-white text-primary shadow-md border-1 border-gray-300"
-                                          key={tech}
-                                        >
-                                          {tech}
-                                        </Badge>
-                                      ))}
-                                    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                                      <PopoverTrigger asChild>
-                                        {/* <Input
+                                    className="py-2 rounded-lg bg-white text-primary shadow-md border-1 border-gray-300"
+                                    key={tech}
+                                  >
+                                    {tech}
+                                  </Badge>
+                                ))}
+                              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                                <PopoverTrigger asChild>
+                                  {/* <Input
                                     type="text"
                                     {...field}
                                     // onChange={() => {}}
                                     placeholder="Type"
                                   /> */}
-                                        <Button size="icon">
-                                          <PlusCircle />
-                                        </Button>
-                                      </PopoverTrigger>
+                                  <Button size="icon">
+                                    <PlusCircle />
+                                  </Button>
+                                </PopoverTrigger>
 
-                                      {/* CONTENT */}
-                                      <PopoverContent>
-                                        <Command>
-                                          <CommandInput placeholder="Select technology..." />
-                                          <CommandList>
-                                            <CommandEmpty>No results found.</CommandEmpty>
-                                            <CommandGroup>
-                                              {popularTechnologies
-                                                .filter((tech: string) => {
-                                                  console.log('zzzzzz', field.value);
-                                                  return !formValues.technologies?.includes(tech);
-                                                })
-                                                .map((tech: string) => (
-                                                  <CommandItem
-                                                    key={tech}
-                                                    onSelect={(value) => {
-                                                      addTechnology(value);
+                                {/* CONTENT */}
+                                <PopoverContent>
+                                  <Command>
+                                    <CommandInput placeholder="Select technology..." />
+                                    <CommandList>
+                                      <CommandEmpty>No results found.</CommandEmpty>
+                                      <CommandGroup>
+                                        {popularTechnologies
+                                          .filter((tech: string) => {
+                                            console.log('zzzzzz', field.value);
+                                            return !formValues.technologies?.includes(tech);
+                                          })
+                                          .map((tech: string) => (
+                                            <CommandItem
+                                              key={tech}
+                                              onSelect={(value) => {
+                                                addTechnology(value);
 
-                                                      setIsPopoverOpen(false);
-                                                    }}
-                                                  >
-                                                    {tech}
-                                                  </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                          </CommandList>
-                                        </Command>
-                                      </PopoverContent>
-                                    </Popover>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <AlertDialogFooter>
-                <AlertDialogCancel
-                  onClick={() => {
-                    form.reset();
-                    setEditIndex(null);
-                    setIsModalOpen(false);
-                  }}
-                >
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction type="submit" disabled={!form.formState.isValid}>
-                  {editIndex !== null ? 'Update' : 'Save'}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </form>
-          </Form>
-        </AlertDialogContent>
-      </AlertDialog>
+                                                setIsPopoverOpen(false);
+                                              }}
+                                            >
+                                              {tech}
+                                            </CommandItem>
+                                          ))}
+                                      </CommandGroup>
+                                    </CommandList>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </ModalEdit>
     </>
   );
 }
