@@ -5,6 +5,7 @@ import { CirclePlus, Pencil, Trash } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import CardList from './CardList';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -161,44 +162,29 @@ export default function EducationForm() {
     <>
       {/* EDUCATION LIST */}
       <ScrollArea className="h-60 mb-8">
-        {educationFields.map((edu: EducationType, index: number) => (
-          <div key={edu.id || `edu-${index}`}>
-            <div className="flex justify-between items-center">
-              <Card
-                className="px-4 py-2 rounded-sm flex-row justify-between cursor-pointer hover:bg-muted w-full"
-                onClick={() => handleEdit(index)}
-              >
-                <CardContent className="text-sm p-0 flex gap-12 items-center w-full">
-                  <CardTitle className="text-md flex items-center">{edu.institution}</CardTitle>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDate(edu.startDate)} -{' '}
-                    {edu.currentlyStudying ? 'Present' : formatDate(edu.endDate)}
-                  </span>
-                </CardContent>
-              </Card>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" type="button" size="icon" className="ml-4">
-                    <Trash className="text-destructive cursor-pointer" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you sure you want to delete this education entry?
-                    </AlertDialogTitle>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDelete(index)}>
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+        <div className="flex flex-col gap-4">
+          {educationFields.map((edu: EducationType, index: number) => (
+            <div key={edu.id || `edu-${index}`}>
+              <CardList
+                {...{
+                  onClick: () => handleEdit(index),
+                  title: edu.institution,
+                  content: (
+                    <span className="text-xs text-muted-foreground">
+                      {formatDate(edu.startDate)} -{' '}
+                      {edu.currentlyStudying ? 'Present' : formatDate(edu.endDate)}
+                    </span>
+                  ),
+                  // footer: (
+                  //   <Button variant="ghost" onClick={() => handleEdit(index)}>
+                  //     <Pencil />
+                  //   </Button>
+                  // ),
+                }}
+              />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </ScrollArea>
 
       {/* ADD/EDIT MODAL */}
@@ -337,6 +323,14 @@ export default function EducationForm() {
                 )}
               />
               <AlertDialogFooter>
+                {isEditing && (
+                  <AlertDialogAction
+                    className="bg-destructive"
+                    onClick={() => editIndex !== null && handleDelete(editIndex)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                )}
                 <AlertDialogCancel
                   onClick={() => {
                     modalForm.reset();

@@ -33,6 +33,15 @@ const tabItems = [
   { value: 'projects', label: 'Projects', icon: <FolderGit2 className="!w-full !h-full" /> },
 ];
 
+function TabTitle(props: { title: string }) {
+  return (
+    <>
+      <CardTitle className="text-3xl text-left mb-4">{props.title}</CardTitle>
+      <Separator className="mb-8" />
+    </>
+  );
+}
+
 export default function ControlPanel(props) {
   return (
     /*     <Sidebar
@@ -74,34 +83,33 @@ export default function ControlPanel(props) {
           <ScrollArea>
             <CardContent className="h-[30rem]">
               <TabsContent value="about">
-                <CardTitle className="text-3xl text-left mb-4">About</CardTitle>
+                <TabTitle title="About" />
                 <Separator className="mb-8" />
                 <AboutForm />
               </TabsContent>
+
               <TabsContent value="contact">
-                <CardTitle className="text-3xl text-left mb-4">Contact</CardTitle>
-                <Separator className="mb-8" />
+                <TabTitle title="Contact" />
                 <ContactForm />
               </TabsContent>
-              <TabsContent value="experience">
-                <CardTitle className="text-3xl text-left mb-4">Experience</CardTitle>
-                <Separator className="mb-8" />
 
+              <TabsContent value="experience">
+                <TabTitle title="Experience" />
                 <ExperienceForm />
               </TabsContent>
+
               <TabsContent value="education">
-                <CardTitle className="text-3xl text-left mb-4">Education</CardTitle>
-                <Separator className="mb-8" />
+                <TabTitle title="Education" />
                 <EducationForm />
               </TabsContent>
+
               <TabsContent value="skills">
-                <CardTitle className="text-3xl text-left mb-4">Skills</CardTitle>
-                <Separator className="mb-8" />
+                <TabTitle title="Skills" />
                 <SkillsForm />
               </TabsContent>
+
               <TabsContent value="projects">
-                <CardTitle className="text-3xl text-left mb-4">Projects</CardTitle>
-                <Separator className="mb-8" />
+                <TabTitle title="Projects" />
                 <ProjectsForm />
               </TabsContent>
             </CardContent>

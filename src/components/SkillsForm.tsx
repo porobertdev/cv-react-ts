@@ -5,6 +5,8 @@ import { CirclePlus, Trash } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import CardList from './CardList';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +35,7 @@ export default function SkillsForm() {
   const { resumeData, updateResumeData } = useContext(ResumeContext);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const form = useForm<{
     skills: SkillType[];
@@ -83,6 +86,8 @@ export default function SkillsForm() {
   }, [editIndex, modalForm]);
 
   const handleSubmit = (data: SkillType) => {
+    console.log('🚀 ~ handleSubmit ~ data:', data, editIndex);
+    console.log('🚀 ~ SkillsForm ~ skillFields:', skillFields);
     const skillData = { ...data, id: data.id || crypto.randomUUID() };
     if (editIndex !== null) {
       update(editIndex, skillData);
@@ -93,6 +98,7 @@ export default function SkillsForm() {
     updateResumeData({ ...resumeData, skills: [...form.getValues().skills] });
     setIsModalOpen(false);
     setEditIndex(null);
+    setIsEditing(false);
     modalForm.reset();
   };
 
@@ -107,73 +113,68 @@ export default function SkillsForm() {
   };
 
   const handleEdit = (index: number) => {
+    console.log('🚀 ~ handleEdit ~ index:', index);
     const skill = skillFields[index];
     modalForm.reset(skill);
     setEditIndex(index);
     setIsModalOpen(true);
+    setIsEditing(true);
   };
 
   const handleDelete = (index: number) => {
     remove(index);
     updateResumeData({ ...resumeData, skills: [...form.getValues().skills] });
+    setIsEditing(false);
   };
 
   return (
     <>
       {/* SKILL LIST */}
-      <ScrollArea className="h-60 mb-8">
-        <div className="flex flex-col gap-4">
-          {Object.values(SkillTypeEnum.enum).map((type) => (
-            <Card key={type}>
-              <CardHeader className="text-left">
-                <CardTitle>{type}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {skillFields
-                  .filter((skill: SkillType) => skill.type === type)
-                  .map((skill: SkillType, index: number) => (
-                    <div key={skill.id || `skill-${index}`}>
-                      <div className="flex justify-between items-center">
-                        <Card
-                          className="px-0 py-2 rounded-none border-none shadow-none flex-row justify-between cursor-pointer hover:bg-muted w-full"
-                          onClick={() => handleEdit(index)}
-                        >
-                          <CardHeader className="p-0">
-                            <CardTitle className="text-sm">{skill.name}</CardTitle>
-                          </CardHeader>
-                          <CardContent className="text-sm p-0 flex gap-12 items-center">
-                            <span>{skill.proficiency}</span>
-                          </CardContent>
-                        </Card>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="icon" className="ml-4">
-                              <Trash className="text-destructive cursor-pointer" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Are you sure you want to delete this skill?
-                              </AlertDialogTitle>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(index)}>
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                      <Separator />
-                    </div>
-                  ))}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
+      <div className="flex flex-col gap-4">
+        {Object.values(SkillTypeEnum.enum).map((type) => (
+          <>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>{type}</AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-4">
+                  {skillFields
+                    .filter((skill: SkillType) => skill.type === type)
+                    .map((skill: SkillType) => {
+                      const index = skillFields.findIndex((item) => item.name === skill.name);
+
+                      return (
+                        <div key={skill.id || `skill-${index}`}>
+                          {/* <div className="flex justify-between items-center"> */}
+                          <CardList
+                            {...{
+                              onClick: () => handleEdit(index),
+                              title: skill.name,
+                              content: (
+                                <span className="text-xs text-muted-foreground italic text-left">
+                                  {skill.proficiency}
+                                </span>
+                              ),
+                              // footer: (
+                              //   <Button variant="ghost" onClick={() => handleEdit(index)}>
+                              //     <Pencil />
+                              //   </Button>
+                              // ),
+                            }}
+                          />
+                          {/* </div> */}
+                        </div>
+                      );
+                    })}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            {/* <div className="">
+                <CardTitle className="text-lg text-left mb-4">{type}</CardTitle>
+                <Separator className="mb-8" />
+              </div> */}
+          </>
+        ))}
+      </div>
 
       {/* ADD/EDIT MODAL */}
       <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -264,6 +265,14 @@ export default function SkillsForm() {
                 )}
               />
               <AlertDialogFooter>
+                {isEditing && (
+                  <AlertDialogAction
+                    className="bg-destructive"
+                    onClick={() => editIndex !== null && handleDelete(editIndex)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                )}
                 <AlertDialogCancel
                   onClick={() => {
                     modalForm.reset();

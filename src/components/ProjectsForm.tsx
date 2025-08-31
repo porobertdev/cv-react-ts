@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Globe, PlusCircle, Trash } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import CardList from './CardList';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -132,9 +133,9 @@ const popularTechnologies: string[] = [
 export default function ProjectsForm(props) {
   const { resumeData, updateResumeData } = useContext(ResumeContext);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const { projects } = resumeData;
 
@@ -176,9 +177,11 @@ export default function ProjectsForm(props) {
   const addTechnology = (tech: string) => {
     form.setValue('technologies', [...(formValues.technologies || []), tech]);
     console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
+    setIsEditing(false);
   };
 
   const editProject = (index: number) => {
+    setIsEditing(true);
     const project = projects[index];
     console.log('🚀 ~ editProject ~ project:', project);
     form.reset(project);
@@ -198,6 +201,7 @@ export default function ProjectsForm(props) {
       },
       technologies: [],
     });
+    setIsEditing(false);
   };
 
   return (
@@ -209,39 +213,18 @@ export default function ProjectsForm(props) {
         <ScrollArea>
           {projects.map((project: ProjectType, index: number) => (
             <div key={project.id || `project-${index}`} className="mb-4">
-              <div className="flex justify-between items-center">
-                <Card
-                  className="px-4 py-2 rounded-sm flex-row justify-between cursor-pointer hover:bg-muted w-full"
-                  onClick={() => editProject(index)}
-                >
-                  <CardContent className="text-sm p-0 flex gap-12 items-center w-full">
-                    <CardTitle className="text-md flex items-center">{project.name}</CardTitle>
-                  </CardContent>
-                </Card>
-
-                <AlertDialog
-                //  open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}
-                >
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" type="button" size="icon" className="ml-4">
-                      <Trash className="text-destructive cursor-pointer" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you sure you want to delete this project entry?
-                      </AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => deleteProject(index)}>
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
+              <CardList
+                {...{
+                  onClick: () => editProject(index),
+                  title: project.name,
+                  content: <span className="text-xs text-muted-foreground"></span>,
+                  // footer: (
+                  //   <Button variant="ghost" onClick={() => handleEdit(index)}>
+                  //     <Pencil />
+                  //   </Button>
+                  // ),
+                }}
+              />
             </div>
           ))}
         </ScrollArea>
@@ -436,6 +419,14 @@ export default function ProjectsForm(props) {
                 )}
               />
               <AlertDialogFooter>
+                {isEditing && (
+                  <AlertDialogAction
+                    className="bg-destructive"
+                    onClick={() => editIndex !== null && deleteProject(editIndex)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                )}
                 <AlertDialogCancel
                   onClick={() => {
                     form.reset();

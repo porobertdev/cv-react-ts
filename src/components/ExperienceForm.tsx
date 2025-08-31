@@ -1,11 +1,11 @@
 import { ResumeContext } from '@/App';
 import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Label } from '@radix-ui/react-label';
-import { CirclePlus, Pencil, Trash } from 'lucide-react';
+import { CirclePlus } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import type { z } from 'zod';
+import CardList from './CardList';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,12 +17,10 @@ import {
   AlertDialogTrigger,
 } from './ui/alert-dialog';
 import { Button } from './ui/button';
-import { Card, CardContent, CardFooter, CardTitle } from './ui/card';
 import { Checkbox } from './ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
-import { Separator } from './ui/separator';
 import { Textarea } from './ui/textarea';
 
 export default function ExperienceForm() {
@@ -135,6 +133,9 @@ export default function ExperienceForm() {
 
   // Handle delete
   const handleDelete = (index: number) => {
+    console.log('🚀 ~ handleDelete ~ index:', index);
+    console.log('🚀 ~ handleDelete ~ index:', jobFields, form.getValues());
+
     remove(index);
     updateResumeData({ experience: { jobs: form.getValues().jobs } });
   };
@@ -151,44 +152,30 @@ export default function ExperienceForm() {
   return (
     <>
       {/* EXPERIENCE LIST */}
-      <ScrollArea className="h-60 mb-8">
-        {jobFields.map((job: ExperienceType, index: number) => (
-          <div key={job.id || `job-${index}`}>
-            <Card className="px-0 py-2 rounded-none border-none justify-between flex-row">
-              <CardContent className="text-sm flex gap-4 items-center w-full">
-                <CardTitle className="text-md flex items-center">{job.company}</CardTitle>
-                <span className="text-xs text-muted-foreground">
-                  {formatDate(job.startDate)} -{' '}
-                  {job.currentlyWorking ? 'Present' : formatDate(job.endDate)}
-                </span>
-              </CardContent>
-              <CardFooter className="gap-2">
-                <Button variant="ghost" onClick={() => handleEdit(index)}>
-                  <Pencil />
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost">
-                      <Trash />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure you want to delete this job?</AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(index)}>
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </CardFooter>
-            </Card>
-            <Separator />
-          </div>
-        ))}
+      <ScrollArea className="h-80 mb-8">
+        <div className="flex flex-col gap-4">
+          {jobFields.map((job: ExperienceType, index: number) => (
+            <div key={job.id || `job-${index}`}>
+              <CardList
+                {...{
+                  onClick: () => handleEdit(index),
+                  title: job.company,
+                  content: (
+                    <span className="text-xs text-muted-foreground italic text-left">
+                      {formatDate(job.startDate)} -{' '}
+                      {job.currentlyWorking ? 'Present' : formatDate(job.endDate)}
+                    </span>
+                  ),
+                  // footer: (
+                  //   <Button variant="ghost" onClick={() => handleEdit(index)}>
+                  //     <Pencil />
+                  //   </Button>
+                  // ),
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </ScrollArea>
 
       {/* ADD/EDIT MODAL */}
@@ -329,6 +316,14 @@ export default function ExperienceForm() {
                 )}
               />
               <AlertDialogFooter>
+                {isEditing && (
+                  <AlertDialogAction
+                    className="bg-destructive"
+                    onClick={() => editIndex !== null && handleDelete(editIndex)}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                )}
                 <AlertDialogCancel
                   onClick={() => {
                     modalForm.reset();
