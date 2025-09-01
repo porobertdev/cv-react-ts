@@ -1,4 +1,3 @@
-import { ResumeContext } from '@/App';
 import {
   Command,
   CommandEmpty,
@@ -8,6 +7,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useResume } from '@/contexts/ResumeContext';
 import { ProjectSchema, type ProjectType, type SkillType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Globe, PlusCircle, Trash } from 'lucide-react';
@@ -131,7 +131,8 @@ const popularTechnologies: string[] = [
 ];
 
 export default function ProjectsForm(props) {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
+  const { resumeData, updateResumeData } = useResume();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);

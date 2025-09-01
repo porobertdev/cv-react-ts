@@ -1,4 +1,4 @@
-import { ResumeContext } from '@/App';
+import { useResume } from '@/contexts/ResumeContext';
 import { EducationSchema, type EducationType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CirclePlus, Pencil, Trash } from 'lucide-react';
@@ -22,11 +22,11 @@ import { Checkbox } from './ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
-import { Separator } from './ui/separator';
 import { Textarea } from './ui/textarea';
 
 export default function EducationForm() {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
+  const { resumeData, updateResumeData } = useResume();
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

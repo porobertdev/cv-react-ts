@@ -1,5 +1,4 @@
-import { ResumeContext } from '@/App';
-import { useContext } from 'react';
+import { useResume } from '@/contexts/ResumeContext';
 import { ScrollArea } from '../ui/scroll-area';
 import DefaultTemplate from './DefaultTemplate';
 
@@ -12,7 +11,7 @@ const templates = {
 };
 
 export default function Template({ name }: Template) {
-  const { resumeData } = useContext(ResumeContext);
+  const { resumeData } = useResume();
 
   const Template = templates[name];
 

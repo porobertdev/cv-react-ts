@@ -1,8 +1,8 @@
-import { ResumeContext } from '@/App';
+import { useResume } from '@/contexts/ResumeContext';
 import { AboutSchema, type AboutType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Avatar } from './ui/avatar';
@@ -11,7 +11,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 
 export default function AboutForm() {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
+  const { resumeData, updateResumeData } = useResume();
 
   const { about } = resumeData;
 

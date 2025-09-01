@@ -41,30 +41,25 @@ export const ContactSchema = z.object({
     .optional(),
 });
 
-export const ExperienceSchema = z.object({
-  jobs: z.array(
-    z
-      .object({
-        id: z.string().optional(),
-        jobTitle: z.string().min(1, 'Job title is required'),
-        company: z.string().min(1, 'Company is required'),
-        location: z.string().min(1, 'Location is required'),
-        startDate: z.string().min(1, 'Start date is required'),
-        endDate: z.string().optional(),
-        description: z.string().min(1, 'Description is required'),
-        currentlyWorking: z.boolean().default(false),
-      })
-      .refine(
-        (data) =>
-          data.currentlyWorking ||
-          (!data.currentlyWorking && data.endDate && data.endDate.length > 0),
-        {
-          message: 'End date is required unless currently working',
-          path: ['endDate'],
-        },
-      ),
-  ),
-});
+export const ExperienceSchema = z
+  .object({
+    id: z.string().optional(),
+    jobTitle: z.string().min(1, 'Job title is required'),
+    company: z.string().min(1, 'Company is required'),
+    location: z.string().min(1, 'Location is required'),
+    startDate: z.string().min(1, 'Start date is required'),
+    endDate: z.string().optional(),
+    description: z.string().min(1, 'Description is required'),
+    currentlyWorking: z.boolean().default(false),
+  })
+  .refine(
+    (data) =>
+      data.currentlyWorking || (!data.currentlyWorking && data.endDate && data.endDate.length > 0),
+    {
+      message: 'End date is required unless currently working',
+      path: ['endDate'],
+    },
+  );
 
 export const EducationSchema = z
   .object({
@@ -108,7 +103,7 @@ export const ProjectSchema = z.object({
 export const ResumeSchema = z.object({
   about: AboutSchema.optional(),
   contact: ContactSchema.optional(),
-  experience: ExperienceSchema.optional(),
+  experience: z.array(ExperienceSchema).optional(),
   education: z.array(EducationSchema).optional(),
   skills: z.array(SkillSchema).optional(),
   projects: z.array(ProjectSchema).optional(),
@@ -116,9 +111,16 @@ export const ResumeSchema = z.object({
 
 export type AboutType = z.infer<typeof AboutSchema>;
 export type ContactType = z.infer<typeof ContactSchema>;
-export type ExperienceType = z.infer<typeof ExperienceSchema.shape.jobs.element>;
+export type ExperienceType = z.infer<typeof ExperienceSchema>;
 export type EducationType = z.infer<typeof EducationSchema>;
 export type SkillType = z.infer<typeof SkillSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ResumeType = z.infer<typeof ResumeSchema>;
 export type PlatformType = z.infer<typeof PlatformEnum>;
+export type FormDataTypes =
+  | AboutType
+  | ContactType
+  | ExperienceType
+  | EducationType
+  | SkillType
+  | ProjectType;

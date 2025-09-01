@@ -1,4 +1,4 @@
-import { ResumeContext } from '@/App';
+import { useResume } from '@/contexts/ResumeContext';
 import { SkillLevelEnum, SkillSchema, SkillTypeEnum, type SkillType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CirclePlus, Trash } from 'lucide-react';
@@ -32,7 +32,8 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 
 export default function SkillsForm() {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
+  const { resumeData, updateResumeData } = useResume();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);

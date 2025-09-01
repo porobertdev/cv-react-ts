@@ -1,4 +1,3 @@
-import { ResumeContext } from '@/App';
 import { ContactSchema, type ContactType, type PlatformType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useContext, type ReactNode } from 'react';
@@ -8,6 +7,7 @@ import { SocialDropdown } from './SocialDropdown';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 
+import { useResume } from '@/contexts/ResumeContext';
 import {
   Facebook,
   Github,
@@ -43,7 +43,8 @@ const socialLinks: SocialLink[] = [
 // const socialLinks = PlatformEnum;
 // console.log('🚀 ~ socialLinks:', socialLinks.enum);
 export default function AboutForm() {
-  const { resumeData, updateResumeData } = useContext(ResumeContext);
+  const { resumeData, updateResumeData } = useResume();
+
   const { contact } = resumeData;
 
   const form = useForm<z.infer<typeof ContactSchema>>({

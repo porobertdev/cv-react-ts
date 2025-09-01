@@ -1,6 +1,5 @@
 'use-client';
 
-import type { ResumeType } from '@/schemas/schemas';
 import { Briefcase, FolderGit2, GraduationCap, Mail, Sparkles, User2 } from 'lucide-react';
 import AboutForm from './AboutForm';
 import ContactForm from './ContactForm';
