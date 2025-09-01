@@ -1,12 +1,9 @@
+import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import type { FormDataTypes, ResumeType } from '@/schemas/schemas';
 import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-  type FieldValues,
-  type UseFormReturn,
-  type UseFormWatch,
-} from 'react-hook-form';
+import { type FieldValues, type UseFormReturn, type UseFormWatch } from 'react-hook-form';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +17,7 @@ import {
 import { Button } from './ui/button';
 import { Form } from './ui/form';
 
-interface ModalEditProps {
+export interface ModalEditProps {
   readonly formData: {
     form: UseFormReturn;
     key: keyof ResumeType;
@@ -32,13 +29,11 @@ interface ModalEditProps {
 
 export default function ModalEdit({ formData, children }: ModalEditProps) {
   const { resumeData, updateResumeData } = useResume();
+  const { isEditing, setIsEditing, editIndex, setEditIndex, isModalOpen, setIsModalOpen } =
+    useModalEdit();
 
   const { form, key: formKey, resetFields } = formData;
   console.log('🚀 ~ ModalEdit ~ form:', form);
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // const formKey = Object.keys(form.control._defaultValues)[0];
 
@@ -97,25 +92,6 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
     });
     setIsEditing(false);
     setEditIndex(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEdit = (index: number) => {
-    let data;
-
-    setIsEditing(true);
-    setEditIndex(index);
-
-    // const data = formFields[index];
-    if (Array.isArray(resumeData[formKey])) {
-      data = resumeData[formKey][index];
-    } else {
-      data = resumeData[formKey];
-    }
-
-    form.reset({
-      ...data,
-    });
     setIsModalOpen(true);
   };
 

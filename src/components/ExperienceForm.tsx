@@ -1,3 +1,4 @@
+import ModalProvider, { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
 import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
@@ -13,6 +14,7 @@ import { Textarea } from './ui/textarea';
 
 export default function ExperienceForm() {
   const { resumeData } = useResume();
+  const { handleEdit, setFormData } = useModalEdit();
 
   // Main form for displaying jobs
   const form = useForm(
@@ -23,6 +25,20 @@ export default function ExperienceForm() {
       mode: 'onChange',
     },
   );
+
+  setFormData({
+    form,
+    key: 'experience',
+    resetFields: {
+      jobTitle: '',
+      company: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      description: '',
+      currentlyWorking: false,
+    },
+  });
 
   // Trigger validation on edit to ensure prefilled values are validated
   // useEffect(() => {
@@ -40,7 +56,9 @@ export default function ExperienceForm() {
             <div key={job.id || `job-${index}`}>
               <CardList
                 {...{
-                  onClick: () => handleEdit(index),
+                  onClick: () => {
+                    handleEdit(index);
+                  },
                   title: job.company,
                   content: (
                     <span className="text-xs text-muted-foreground italic text-left">
@@ -61,20 +79,19 @@ export default function ExperienceForm() {
       </ScrollArea>
 
       {/* ADD/EDIT MODAL */}
+      {/* <ModalProvider> */}
       <ModalEdit
-        {...{
-          formData: {
-            form: form,
-            key: 'experience',
-            resetFields: {
-              jobTitle: '',
-              company: '',
-              location: '',
-              startDate: '',
-              endDate: '',
-              description: '',
-              currentlyWorking: false,
-            },
+        formData={{
+          form: form,
+          key: 'experience',
+          resetFields: {
+            jobTitle: '',
+            company: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            description: '',
+            currentlyWorking: false,
           },
         }}
       >
@@ -201,6 +218,7 @@ export default function ExperienceForm() {
           )}
         />
       </ModalEdit>
+      {/* </ModalProvider> */}
     </>
   );
 }

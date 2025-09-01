@@ -6,9 +6,19 @@ export interface ResumeContextType {
   updateResumeData: (data: Partial<ResumeType>) => void;
 }
 
+interface ResumeProviderProps {
+  children: React.ReactNode;
+}
+
 const ResumeContext = createContext<ResumeContextType | null>(null);
 
-export const ResumeProvider = ({ children }) => {
+export const useResume = () => {
+  const ctx = useContext(ResumeContext);
+  if (!ctx) throw new Error('useResume must be used inside ResumeProvider');
+  return ctx;
+};
+
+export const ResumeProvider = ({ children }: ResumeProviderProps) => {
   const [resumeData, setResumeData] = useState<Partial<ResumeType>>({
     about: {
       profilePic:
@@ -132,7 +142,7 @@ export const ResumeProvider = ({ children }) => {
     ],
   });
 
-  console.log("🚀 ~ ResumeProvider ~ resumeData:", resumeData)
+  console.log('🚀 ~ ResumeProvider ~ resumeData:', resumeData);
 
   const updateResumeData = (data: Partial<ResumeType>) =>
     setResumeData((prevData) => ({ ...prevData, ...data }));
@@ -142,10 +152,4 @@ export const ResumeProvider = ({ children }) => {
       {children}
     </ResumeContext.Provider>
   );
-};
-
-export const useResume = () => {
-  const ctx = useContext(ResumeContext);
-  if (!ctx) throw new Error('useResume must be used inside ResumeProvider');
-  return ctx;
 };
