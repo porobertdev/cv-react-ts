@@ -1,4 +1,4 @@
-import ModalProvider, { useModalEdit } from '@/contexts/ModalContext';
+import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
 import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
@@ -14,7 +14,6 @@ import { Textarea } from './ui/textarea';
 
 export default function ExperienceForm() {
   const { resumeData } = useResume();
-  const { handleEdit, setFormData } = useModalEdit();
 
   // Main form for displaying jobs
   const form = useForm(
@@ -26,26 +25,7 @@ export default function ExperienceForm() {
     },
   );
 
-  setFormData({
-    form,
-    key: 'experience',
-    resetFields: {
-      jobTitle: '',
-      company: '',
-      location: '',
-      startDate: '',
-      endDate: '',
-      description: '',
-      currentlyWorking: false,
-    },
-  });
-
-  // Trigger validation on edit to ensure prefilled values are validated
-  // useEffect(() => {
-  //   if (isEditing && editIndex !== null) {
-  //     form.trigger(); // Trigger validation for all fields
-  //   }
-  // }, [isEditing, editIndex, form]);
+  const { handleEdit } = useModalEdit(form, 'experience');
 
   return (
     <>
@@ -57,7 +37,7 @@ export default function ExperienceForm() {
               <CardList
                 {...{
                   onClick: () => {
-                    handleEdit(index);
+                    handleEdit(index, form, 'experience');
                   },
                   title: job.company,
                   content: (
@@ -79,7 +59,6 @@ export default function ExperienceForm() {
       </ScrollArea>
 
       {/* ADD/EDIT MODAL */}
-      {/* <ModalProvider> */}
       <ModalEdit
         formData={{
           form: form,
@@ -218,7 +197,6 @@ export default function ExperienceForm() {
           )}
         />
       </ModalEdit>
-      {/* </ModalProvider> */}
     </>
   );
 }

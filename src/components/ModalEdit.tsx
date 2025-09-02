@@ -2,8 +2,7 @@ import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import type { FormDataTypes, ResumeType } from '@/schemas/schemas';
 import { CirclePlus } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { type FieldValues, type UseFormReturn, type UseFormWatch } from 'react-hook-form';
+import { type UseFormReturn } from 'react-hook-form';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +18,7 @@ import { Form } from './ui/form';
 
 export interface ModalEditProps {
   readonly formData: {
-    form: UseFormReturn;
+    form: UseFormReturn<FormDataTypes>;
     key: keyof ResumeType;
     // form: UseFormWatch<FieldValues>;
     resetFields: FormDataTypes;
@@ -33,9 +32,6 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
     useModalEdit();
 
   const { form, key: formKey, resetFields } = formData;
-  console.log('🚀 ~ ModalEdit ~ form:', form);
-
-  // const formKey = Object.keys(form.control._defaultValues)[0];
 
   // Trigger validation on edit to ensure prefilled values are validated
   /* useEffect(() => {
@@ -45,29 +41,34 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
   }, [isEditing, editIndex, form]); */
 
   const handleSubmit = (data: FormDataTypes) => {
-    console.log('🚀 ~ handleSubmit ~ data:', data, 'editIndex:', editIndex);
-
     // add an ID
     data = {
       ...data,
       id: crypto.randomUUID(),
-
-      // endDate: data.currentlyWorking ? '' : data.endDate,
     };
-
-    /* if (editIndex !== null) {
-      update(editIndex, data);
-    } else {
-      console.log('🚀 ~ handleSubmit ~ appending =>:', formFields);
-
-      append(data);
-    } */
 
     console.log('🚀 ~ handleSubmit ~ APPENDED =>:', data);
 
-    if (Array.isArray(resumeData[formKey])) {
+    if (isEditing) {
+      // update existing item
+      // updateResumeData({ [formKey]: [...resumeData[formKey].splice(editIndex, 1), data] });
+
+      updateResumeData({
+        [formKey]: [
+          // filter() messes up the indexes, which cause the edited item to be appended
+          ...resumeData[formKey].map((item: FormDataTypes, index: number) => {
+            if (index === editIndex) {
+              return data;
+            } else {
+              return item;
+            }
+          }),
+        ],
+      });
+    } else if (Array.isArray(resumeData[formKey])) {
       updateResumeData({ [formKey]: [...resumeData[formKey], data] });
     } else {
+      // about & contact are just an obj
       updateResumeData({ [formKey]: data });
     }
 
@@ -79,9 +80,9 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
       form.control._defaultValues,
     );
 
-    setIsModalOpen(false);
-    setEditIndex(null);
     setIsEditing(false);
+    setEditIndex(null);
+    setIsModalOpen(false);
     form.reset();
   };
 
@@ -96,13 +97,14 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
   };
 
   const handleDelete = (index: number) => {
-    // remove(index);
-    updateResumeData({ [formKey]: form.getValues()[formKey] });
+    console.log('🚀 ~ handleDelete ~ index:', index);
 
     if (Array.isArray(resumeData[formKey])) {
       updateResumeData({
         [formKey]: resumeData[formKey].filter((item: FormDataTypes, i: number) => i !== index),
       });
+    } else {
+      updateResumeData({ [formKey]: form.getValues()[formKey] });
     }
   };
 

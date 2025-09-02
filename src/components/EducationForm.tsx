@@ -1,93 +1,46 @@
+import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
+import { formatDate } from '@/lib/utils';
 import { EducationSchema, type EducationType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CirclePlus, Pencil, Trash } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm } from 'react-hook-form';
 import CardList from './CardList';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from './ui/alert-dialog';
-import { Button } from './ui/button';
-import { Card, CardContent, CardTitle } from './ui/card';
+import ModalEdit from './ModalEdit';
 import { Checkbox } from './ui/checkbox';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { Textarea } from './ui/textarea';
 
 export default function EducationForm() {
   const { resumeData, updateResumeData } = useResume();
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { education } = resumeData;
 
   // Main form for displaying education entries
-  const form = useForm<{
-    education: EducationType[];
-  }>({
-    resolver: zodResolver(
-      z.object({
-        education: z.array(EducationSchema),
-      }),
-    ),
-    defaultValues: {
-      education: resumeData.education || [],
+  const form = useForm(
+    // <{education: EducationType[];}>
+    {
+      resolver: zodResolver(EducationSchema),
+      defaultValues: resumeData.education[0] || [
+        {
+          institution: '',
+          degree: '',
+          fieldOfStudy: '',
+          startDate: '',
+          endDate: '',
+          description: '',
+          currentlyStudying: false,
+        },
+      ],
+      mode: 'onChange',
     },
-    mode: 'onChange',
-  });
+  );
 
-  // Form for adding/editing education in modal
-  const modalForm = useForm<EducationType>({
-    resolver: zodResolver(EducationSchema),
-    defaultValues: {
-      institution: '',
-      degree: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      description: '',
-      currentlyStudying: false,
-    },
-    mode: 'onChange', // Validate immediately for editing
-  });
-
-  const {
-    fields: educationFields,
-    append,
-    update,
-    remove,
-  } = useFieldArray({
-    control: form.control,
-    name: 'education',
-  });
-
-  // Sync form with resumeData changes
-  useEffect(() => {
-    form.reset({
-      education: resumeData.education || [],
-    });
-  }, [resumeData.education, form]);
-
-  // Trigger validation on edit to ensure prefilled values are validated
-  useEffect(() => {
-    if (isEditing && editIndex !== null) {
-      modalForm.trigger(); // Trigger validation for all fields
-    }
-  }, [isEditing, editIndex, modalForm]);
+  const { handleEdit } = useModalEdit(form, 'education');
 
   // Reset modal form when opening for add
   const handleAdd = () => {
-    modalForm.reset({
+    form.reset({
       institution: '',
       degree: '',
       fieldOfStudy: '',
@@ -96,27 +49,27 @@ export default function EducationForm() {
       description: '',
       currentlyStudying: false,
     });
-    setIsEditing(false);
+    /* setIsEditing(false);
     setEditIndex(null);
-    setIsModalOpen(true);
+    setIsModalOpen(true); */
   };
 
   // Handle edit button click
-  const handleEdit = (index: number) => {
+  /* const handleEdit = (index: number) => {
     setIsEditing(true);
     setEditIndex(index);
     const education = educationFields[index];
-    modalForm.reset({
+    form.reset({
       ...education,
       startDate: education.startDate || '',
       endDate: education.endDate || '',
       currentlyStudying: education.currentlyStudying ?? !education.endDate,
     });
     setIsModalOpen(true);
-  };
+  }; */
 
   // Handle form submission for add/edit
-  const handleSubmit = async (data: EducationType) => {
+  /* const handleSubmit = async (data: EducationType) => {
     try {
       // Validate form data against schema
       const parsedData = await EducationSchema.parseAsync({
@@ -134,40 +87,25 @@ export default function EducationForm() {
       }
       // Update context with the latest education entries
       updateResumeData({ education: form.getValues().education });
-      modalForm.reset();
+      form.reset();
       setIsEditing(false);
       setEditIndex(null);
       setIsModalOpen(false);
     } catch (error) {
       console.error('Validation failed:', error);
     }
-  };
-
-  // Handle delete
-  const handleDelete = (index: number) => {
-    remove(index);
-    updateResumeData({ education: form.getValues().education });
-  };
-
-  // Format date for display
-  const formatDate = (date: string | undefined) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      year: 'numeric',
-    });
-  };
+  }; */
 
   return (
     <>
       {/* EDUCATION LIST */}
       <ScrollArea className="h-60 mb-8">
         <div className="flex flex-col gap-4">
-          {educationFields.map((edu: EducationType, index: number) => (
+          {education.map((edu: EducationType, index: number) => (
             <div key={edu.id || `edu-${index}`}>
               <CardList
                 {...{
-                  onClick: () => handleEdit(index),
+                  onClick: () => handleEdit(index, form, 'education'),
                   title: edu.institution,
                   content: (
                     <span className="text-xs text-muted-foreground">
@@ -187,168 +125,142 @@ export default function EducationForm() {
         </div>
       </ScrollArea>
 
-      {/* ADD/EDIT MODAL */}
-      <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <AlertDialogTrigger asChild>
-          <Button variant="outline" className="cursor-pointer" onClick={handleAdd}>
-            <CirclePlus />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{isEditing ? 'Edit Education' : 'Add Education'}</AlertDialogTitle>
-          </AlertDialogHeader>
-          <Form {...modalForm}>
-            <form onSubmit={modalForm.handleSubmit(handleSubmit)} className="flex flex-col gap-6">
-              <FormField
-                control={modalForm.control}
-                name="institution"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Institution <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={modalForm.control}
-                name="degree"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Degree <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={modalForm.control}
-                name="fieldOfStudy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Field of Study <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex gap-4 items-center">
-                <FormField
-                  control={modalForm.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Start Date <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => field.onChange(e.target.value)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={modalForm.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        End Date{' '}
-                        {!modalForm.watch('currentlyStudying') && (
-                          <span className="text-destructive">*</span>
-                        )}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => field.onChange(e.target.value)}
-                          disabled={modalForm.watch('currentlyStudying')}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={modalForm.control}
-                name="currentlyStudying"
-                render={({ field }) => (
-                  <FormItem className="flex gap-2 items-center">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          if (checked) modalForm.setValue('endDate', '');
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm">Currently studying</FormLabel>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={modalForm.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea rows={5} {...field} value={field.value || ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <AlertDialogFooter>
-                {isEditing && (
-                  <AlertDialogAction
-                    className="bg-destructive"
-                    onClick={() => editIndex !== null && handleDelete(editIndex)}
-                  >
-                    Delete
-                  </AlertDialogAction>
-                )}
-                <AlertDialogCancel
-                  onClick={() => {
-                    modalForm.reset();
-                    setIsEditing(false);
-                    setEditIndex(null);
-                    setIsModalOpen(false);
+      <ModalEdit
+        formData={{
+          form: form,
+          key: 'education',
+          resetFields: {
+            jobTitle: '',
+            company: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            description: '',
+            currentlyWorking: false,
+          },
+        }}
+      >
+        <FormField
+          control={form.control}
+          name="institution"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Institution <span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="degree"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Degree <span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fieldOfStudy"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Field of Study <span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex gap-4 items-center">
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Start Date <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  End Date{' '}
+                  {!form.watch('currentlyStudying') && <span className="text-destructive">*</span>}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    disabled={form.watch('currentlyStudying')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name="currentlyStudying"
+          render={({ field }) => (
+            <FormItem className="flex gap-2 items-center">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    if (checked) form.setValue('endDate', '');
                   }}
-                >
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction type="submit" disabled={!modalForm.formState.isValid}>
-                  {isEditing ? 'Update' : 'Add'}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </form>
-          </Form>
-        </AlertDialogContent>
-      </AlertDialog>
+                />
+              </FormControl>
+              <FormLabel className="text-sm">Currently studying</FormLabel>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea rows={5} {...field} value={field.value || ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </ModalEdit>
     </>
   );
 }
