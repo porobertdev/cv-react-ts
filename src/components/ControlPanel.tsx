@@ -7,10 +7,9 @@ import EducationForm from './EducationForm';
 import ExperienceForm from './ExperienceForm';
 import ProjectsForm from './ProjectsForm';
 import SkillsForm from './SkillsForm';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardTitle } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
-import { Sidebar, SidebarContent, SidebarHeader } from './ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
@@ -83,7 +82,6 @@ export default function ControlPanel(props) {
             <CardContent className="h-[30rem]">
               <TabsContent value="about">
                 <TabTitle title="About" />
-                <Separator className="mb-8" />
                 <AboutForm />
               </TabsContent>
 
