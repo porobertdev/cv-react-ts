@@ -54,12 +54,12 @@ export default function ControlPanel(props) {
     </Sidebar> */
     <Tabs
       defaultValue="about"
-      orientation="horizontal"
+      orientation="vertical"
       className="w-full"
       //  activationMode='automatic'
     >
-      <div className="flex flex-col gap-8 h-screen">
-        <TabsList className="px-4 py-2 shadow-sm justify-center  gap-6 bg-white h-max">
+      <div className="flex gap-4 h-screen">
+        <TabsList className="px-2 py-2 shadow-sm justify-center flex-col gap-6 bg-white h-max">
           {tabItems.map(({ value, label, icon }) => (
             <TabsTrigger
               key={value}
