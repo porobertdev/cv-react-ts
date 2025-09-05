@@ -47,6 +47,14 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
       id: crypto.randomUUID(),
     };
 
+    if ('currentlyStudying' in data && data.currentlyStudying) {
+      data.endDate = 'Present';
+    }
+
+    if ('currentlyWorking' in data && data.currentlyWorking) {
+      data.endDate = 'Present';
+    }
+
     console.log('🚀 ~ handleSubmit ~ APPENDED =>:', data);
 
     if (isEditing) {
