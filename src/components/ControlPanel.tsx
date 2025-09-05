@@ -2,6 +2,7 @@
 
 import { Briefcase, FolderGit2, GraduationCap, Mail, Sparkles, User2 } from 'lucide-react';
 import AboutForm from './AboutForm';
+import AutoSaveBadge from './AutoSaveBadge';
 import ContactForm from './ContactForm';
 import EducationForm from './EducationForm';
 import ExperienceForm from './ExperienceForm';
@@ -34,6 +35,7 @@ const tabItems = [
 function TabTitle(props: { title: string }) {
   return (
     <>
+      <AutoSaveBadge />
       <CardTitle className="text-3xl text-left mb-4">{props.title}</CardTitle>
       <Separator className="mb-8" />
     </>
