@@ -9,17 +9,17 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
-import { ProjectSchema, type ProjectType, type SkillType } from '@/schemas/schemas';
+import { ProjectSchema, type ProjectType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GithubIcon, Globe, PlusCircle, Trash } from 'lucide-react';
-import { useContext, useState } from 'react';
+import { GithubIcon, Globe, PlusCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from './CardList';
 import ModalEdit from './ModalEdit';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Card, CardContent, CardTitle } from './ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Card, CardContent } from './ui/card';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { Textarea } from './ui/textarea';
@@ -175,6 +175,10 @@ export default function ProjectsForm(props) {
     setEditIndex(index);
     setIsModalOpen(true);
 }; */
+
+  useEffect(() => {
+    form.reset(projects);
+  }, [resumeData]);
 
   return (
     <>

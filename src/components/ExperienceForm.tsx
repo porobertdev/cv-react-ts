@@ -3,6 +3,7 @@ import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
 import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from './CardList';
 import ModalEdit from './ModalEdit';
@@ -15,17 +16,23 @@ import { Textarea } from './ui/textarea';
 export default function ExperienceForm() {
   const { resumeData } = useResume();
 
+  const { experience } = resumeData;
+
   // Main form for displaying jobs
   const form = useForm(
     // <ExperienceType>
     {
       resolver: zodResolver(ExperienceSchema),
-      defaultValues: resumeData.experience[0] || [],
+      defaultValues: experience[0] || [],
       mode: 'onChange',
     },
   );
 
   const { handleEdit } = useModalEdit(form, 'experience');
+
+  useEffect(() => {
+    form.reset(experience);
+  }, [resumeData]);
 
   return (
     <>

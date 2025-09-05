@@ -1,12 +1,15 @@
 import { DEFAULT_RESUME_DATA } from '@/constants/constants';
 import type { ResumeType } from '@/schemas/schemas';
 import { useLocalStorage } from '@uidotdev/usehooks';
+import { CheckCircle } from 'lucide-react';
 import { createContext, useContext, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { toast } from 'sonner';
 
 export interface ResumeContextType {
   resumeData: Partial<ResumeType>;
   updateResumeData: (data: Partial<ResumeType>) => void;
+  resetData: () => void;
   pdf: {
     ref: React.RefObject<HTMLDivElement | null>;
     print: () => void;
@@ -39,11 +42,24 @@ export const ResumeProvider = ({ children }: { children: React.ReactNode }) => {
     setResumeData((prevData) => ({ ...prevData, ...data }));
   };
 
+  const resetData = () => {
+    setResumeData(DEFAULT_RESUME_DATA);
+    toast('All resume data restored to default', {
+      icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+      className: 'max-w-max',
+      // action: {
+      //   label: 'Undo',
+      //   onClick: () => console.log('Undo'),
+      // },
+    });
+  };
+
   return (
     <ResumeContext.Provider
       value={{
         resumeData,
         updateResumeData,
+        resetData,
         pdf: {
           ref: contentRef,
           print,

@@ -1,6 +1,6 @@
 import { ContactSchema, type ContactType, type PlatformType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useFieldArray, useForm, type FieldArrayWithId } from 'react-hook-form';
 import { z } from 'zod';
 import { SocialDropdown } from './SocialDropdown';
@@ -8,16 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from './ui/input';
 
 import { useResume } from '@/contexts/ResumeContext';
-import {
-  Facebook,
-  Github,
-  Globe,
-  Instagram,
-  Linkedin,
-  Trash,
-  Twitter,
-  type LucideIcon,
-} from 'lucide-react';
+import { Facebook, Github, Globe, Instagram, Linkedin, Trash, Twitter } from 'lucide-react';
 import { Button } from './ui/button';
 
 export interface SocialLink {
@@ -81,6 +72,10 @@ export default function AboutForm() {
     remove(index);
     handleFormChange();
   };
+
+  useEffect(() => {
+    form.reset(contact);
+  }, [resumeData]);
 
   return (
     <Form {...form}>

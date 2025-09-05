@@ -2,7 +2,7 @@ import { useResume } from '@/contexts/ResumeContext';
 import { AboutSchema, type AboutType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Avatar } from './ui/avatar';
@@ -32,6 +32,10 @@ export default function AboutForm() {
   const handleFormChange = () => {
     updateResumeData({ about: form.getValues() });
   };
+
+  useEffect(() => {
+    form.reset(about);
+  }, [resumeData]);
 
   return (
     <Form {...form}>

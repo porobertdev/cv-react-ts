@@ -2,6 +2,7 @@ import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { SkillLevelEnum, SkillSchema, SkillTypeEnum, type SkillType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from './CardList';
 import ModalEdit from './ModalEdit';
@@ -31,6 +32,10 @@ export default function SkillsForm() {
   );
 
   const { handleEdit } = useModalEdit({ form, key: 'skills' });
+
+  useEffect(() => {
+    form.reset(skills);
+  }, [resumeData]);
 
   return (
     <>

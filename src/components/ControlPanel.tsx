@@ -7,6 +7,7 @@ import {
   FolderGit2,
   GraduationCap,
   Mail,
+  RotateCcw,
   Sparkles,
   User2,
 } from 'lucide-react';
@@ -53,7 +54,7 @@ function TabTitle(props: { title: string }) {
 }
 
 export default function ControlPanel(props) {
-  const { pdf } = useResume();
+  const { pdf, resetData } = useResume();
 
   return (
     /*     <Sidebar
@@ -99,11 +100,11 @@ export default function ControlPanel(props) {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <Card className="p-2 mb-8 bg-primary">
-              <CardContent className="p-0">
+            <Card className="p-2 mb-8">
+              <CardContent className="p-0 flex flex-col gap-4">
                 <Button
-                  variant="outline"
-                  className="w-10 h-10 rounded-full"
+                  variant="secondary"
+                  className="w-10 h-10 rounded-full cursor-pointer"
                   onClick={() => pdf.print()}
                 >
                   <Tooltip>
@@ -112,6 +113,20 @@ export default function ControlPanel(props) {
                     </TooltipTrigger>
                     <TooltipContent className="mb-4">
                       <p>Download</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-10 h-10 rounded-full"
+                  onClick={() => resetData()}
+                >
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <RotateCcw />
+                    </TooltipTrigger>
+                    <TooltipContent className="mb-4">
+                      <p>Reset resume data</p>
                     </TooltipContent>
                   </Tooltip>
                 </Button>
