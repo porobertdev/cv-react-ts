@@ -11,7 +11,7 @@ const templates = {
 };
 
 export default function Template({ name }: Template) {
-  const { resumeData } = useResume();
+  const { resumeData, pdf } = useResume();
 
   const Template = templates[name];
 
@@ -19,7 +19,19 @@ export default function Template({ name }: Template) {
     <ScrollArea>
       <div className="scale-95 origin-top mr-4 h-[5rem]">
         <div className="shadow-2xl p-0.5">
-          <Template {...resumeData} />
+          <div ref={pdf.ref}>
+            <style>
+              {`@page { size: A4 portrait; margin: 0; }
+      @media print {
+        html, body {
+          height: 100%;
+          overflow: visible !important;
+        }
+        
+      }`}
+            </style>
+            <Template {...resumeData} />
+          </div>
         </div>
       </div>
     </ScrollArea>
