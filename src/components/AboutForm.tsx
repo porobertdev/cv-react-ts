@@ -15,7 +15,7 @@ export default function AboutForm() {
 
   const { about } = resumeData;
 
-  const [fileSrc, setFileSrc] = useState();
+  const [fileSrc, setFileSrc] = useState<string | File | undefined>(about?.profilePic);
 
   const form = useForm<z.infer<typeof AboutSchema>>({
     resolver: zodResolver(AboutSchema),
@@ -60,14 +60,18 @@ export default function AboutForm() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => {
-                        const file = e.target.files?.[0];
+                        const file = e.target.files?.[0] as Blob;
                         console.log('🚀 ~ AboutForm ~ file:', file);
                         field.onChange(file); // store the File object in RHF
-                        const src = URL.createObjectURL(file);
-                        console.log('🚀 ~ AboutForm ~ src:', src);
-                        setFileSrc(src);
-                        form.setValue('profilePic', src);
 
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          const base64 = reader.result as string;
+                          setFileSrc(base64);
+                          form.setValue('profilePic', base64);
+                          updateResumeData({ about: { ...form.getValues(), profilePic: base64 } });
+                        };
+                        reader.readAsDataURL(file);
                         console.log('🚀 ~ AboutForm ~ form:', form.getValues());
                       }}
                       onBlur={field.onBlur}
