@@ -1,8 +1,8 @@
 import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
-import type { FormDataTypes, ResumeType } from '@/schemas/schemas';
+import type { FormDataTypes, FormDataTypesUnion, ResumeType } from '@/schemas/schemas';
 import { CirclePlus } from 'lucide-react';
-import { type UseFormReturn } from 'react-hook-form';
+import { type FieldValues, type UseFormReturn } from 'react-hook-form';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,21 +16,24 @@ import {
 import { Button } from './ui/button';
 import { Form } from './ui/form';
 
-export interface ModalEditProps {
+export interface ModalEditProps<TFormValues extends FieldValues> {
   readonly formData: {
-    form: UseFormReturn<FormDataTypes>;
+    form: UseFormReturn<TFormValues>;
     key: keyof ResumeType;
-    // form: UseFormWatch<FieldValues>;
-    resetFields: FormDataTypes;
+    resetFields: Partial<TFormValues>;
   };
   readonly children: React.ReactNode;
 }
 
-export default function ModalEdit({ formData, children }: ModalEditProps) {
+export default function ModalEdit<TFormValues extends FieldValues>({
+  formData,
+  children,
+}: ModalEditProps<TFormValues>) {
   const { resumeData, updateResumeData } = useResume();
   const { isEditing, setIsEditing, editIndex, setEditIndex, isModalOpen, setIsModalOpen } =
     useModalEdit();
 
+  // const resetFields = DEFAULT_RESUME_DATA[formKey];
   const { form, key: formKey, resetFields } = formData;
 
   // Trigger validation on edit to ensure prefilled values are validated
@@ -40,7 +43,7 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
     }
   }, [isEditing, editIndex, form]); */
 
-  const handleSubmit = (data: FormDataTypes) => {
+  const handleSubmit = (data: FormDataTypesUnion) => {
     // add an ID
     data = {
       ...data,
@@ -61,18 +64,20 @@ export default function ModalEdit({ formData, children }: ModalEditProps) {
       // update existing item
       // updateResumeData({ [formKey]: [...resumeData[formKey].splice(editIndex, 1), data] });
 
-      updateResumeData({
-        [formKey]: [
-          // filter() messes up the indexes, which cause the edited item to be appended
-          ...resumeData[formKey].map((item: FormDataTypes, index: number) => {
-            if (index === editIndex) {
-              return data;
-            } else {
-              return item;
-            }
-          }),
-        ],
-      });
+      if (resumeData[formKey]) {
+        updateResumeData({
+          [formKey]: [
+            // filter() messes up the indexes, which cause the edited item to be appended
+            ...resumeData[formKey].map((item: FormDataTypes, index: number) => {
+              if (index === editIndex) {
+                return data;
+              } else {
+                return item;
+              }
+            }),
+          ],
+        });
+      }
     } else if (Array.isArray(resumeData[formKey])) {
       updateResumeData({ [formKey]: [...resumeData[formKey], data] });
     } else {

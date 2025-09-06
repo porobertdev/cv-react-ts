@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { Separator } from '../ui/separator';
 
 export default function DefaultTemplate(data: ResumeType) {
-  const { about, contact, experience, education, skills, projects } = data;
+  const { about, contact, experience, education, skills } = data;
   console.log('🚀 ~ DefaultTemplate ~ experience:', experience);
 
   return (

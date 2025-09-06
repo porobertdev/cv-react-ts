@@ -1,121 +1,54 @@
 import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
-import { EducationSchema, type EducationType } from '@/schemas/schemas';
+import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import CardList from './CardList';
-import ModalEdit from './ModalEdit';
-import { Checkbox } from './ui/checkbox';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
-import { ScrollArea } from './ui/scroll-area';
-import { Textarea } from './ui/textarea';
+import CardList from '../CardList';
+import ModalEdit from '../ModalEdit';
+import { Checkbox } from '../ui/checkbox';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Textarea } from '../ui/textarea';
 
-export default function EducationForm() {
-  const { resumeData, updateResumeData } = useResume();
-  const { education } = resumeData;
+export default function ExperienceForm() {
+  const { resumeData } = useResume();
 
-  // Main form for displaying education entries
-  const form = useForm(
-    // <{education: EducationType[];}>
-    {
-      resolver: zodResolver(EducationSchema),
-      defaultValues: education[0] || [
-        {
-          institution: '',
-          degree: '',
-          fieldOfStudy: '',
-          startDate: '',
-          endDate: '',
-          description: '',
-          currentlyStudying: false,
-        },
-      ],
-      mode: 'onChange',
-    },
-  );
+  const { experience } = resumeData;
 
-  const { handleEdit } = useModalEdit(form, 'education');
+  // Main form for displaying jobs
+  const form = useForm<ExperienceType>({
+    // <ExperienceType>
+    resolver: zodResolver(ExperienceSchema),
+    defaultValues: experience?.[0],
+    mode: 'onChange',
+  });
+
+  const { handleEdit } = useModalEdit({ form, key: 'experience' });
 
   useEffect(() => {
-    form.reset(education);
-  }, [resumeData]);
-
-  // Reset modal form when opening for add
-  const handleAdd = () => {
-    form.reset({
-      institution: '',
-      degree: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      description: '',
-      currentlyStudying: false,
-    });
-    /* setIsEditing(false);
-    setEditIndex(null);
-    setIsModalOpen(true); */
-  };
-
-  // Handle edit button click
-  /* const handleEdit = (index: number) => {
-    setIsEditing(true);
-    setEditIndex(index);
-    const education = educationFields[index];
-    form.reset({
-      ...education,
-      startDate: education.startDate || '',
-      endDate: education.endDate || '',
-      currentlyStudying: education.currentlyStudying ?? !education.endDate,
-    });
-    setIsModalOpen(true);
-  }; */
-
-  // Handle form submission for add/edit
-  /* const handleSubmit = async (data: EducationType) => {
-    try {
-      // Validate form data against schema
-      const parsedData = await EducationSchema.parseAsync({
-        ...data,
-        endDate: data.currentlyStudying ? '' : data.endDate,
-      });
-      const formattedData: EducationType = {
-        ...parsedData,
-        id: data.id || crypto.randomUUID(),
-      };
-      if (isEditing && editIndex !== null) {
-        update(editIndex, formattedData);
-      } else {
-        append(formattedData);
-      }
-      // Update context with the latest education entries
-      updateResumeData({ education: form.getValues().education });
-      form.reset();
-      setIsEditing(false);
-      setEditIndex(null);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Validation failed:', error);
-    }
-  }; */
+    form.reset(experience?.[0]);
+  }, [resumeData, form, experience]);
 
   return (
     <>
-      {/* EDUCATION LIST */}
-      <ScrollArea className="h-60 mb-8">
+      {/* EXPERIENCE LIST */}
+      <ScrollArea className="h-80 mb-8">
         <div className="flex flex-col gap-4">
-          {education.map((edu: EducationType, index: number) => (
-            <div key={edu.id || `edu-${index}`}>
+          {resumeData.experience?.map((job: ExperienceType, index: number) => (
+            <div key={job.id || `job-${index}`}>
               <CardList
                 {...{
-                  onClick: () => handleEdit(index, form, 'education'),
-                  title: edu.institution,
+                  onClick: () => {
+                    handleEdit(index, { form, key: 'experience' });
+                  },
+                  title: job.company,
                   content: (
-                    <span className="text-xs text-muted-foreground">
-                      {formatDate(edu.startDate)} -{' '}
-                      {edu.currentlyStudying ? 'Present' : formatDate(edu.endDate)}
+                    <span className="text-xs text-muted-foreground italic text-left">
+                      {formatDate(job.startDate)} -{' '}
+                      {job.currentlyWorking ? 'Present' : formatDate(job.endDate)}
                     </span>
                   ),
                   // footer: (
@@ -130,10 +63,11 @@ export default function EducationForm() {
         </div>
       </ScrollArea>
 
+      {/* ADD/EDIT MODAL */}
       <ModalEdit
         formData={{
           form: form,
-          key: 'education',
+          key: 'experience',
           resetFields: {
             jobTitle: '',
             company: '',
@@ -147,11 +81,11 @@ export default function EducationForm() {
       >
         <FormField
           control={form.control}
-          name="institution"
+          name="jobTitle"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Institution <span className="text-destructive">*</span>
+                Job Title <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -162,11 +96,11 @@ export default function EducationForm() {
         />
         <FormField
           control={form.control}
-          name="degree"
+          name="company"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Degree <span className="text-destructive">*</span>
+                Company <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -177,11 +111,11 @@ export default function EducationForm() {
         />
         <FormField
           control={form.control}
-          name="fieldOfStudy"
+          name="location"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Field of Study <span className="text-destructive">*</span>
+                Location <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -218,7 +152,7 @@ export default function EducationForm() {
               <FormItem>
                 <FormLabel>
                   End Date{' '}
-                  {!form.watch('currentlyStudying') && <span className="text-destructive">*</span>}
+                  {!form.watch('currentlyWorking') && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -226,7 +160,7 @@ export default function EducationForm() {
                     {...field}
                     value={field.value || ''}
                     onChange={(e) => field.onChange(e.target.value)}
-                    disabled={form.watch('currentlyStudying')}
+                    disabled={form.watch('currentlyWorking')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -236,7 +170,7 @@ export default function EducationForm() {
         </div>
         <FormField
           control={form.control}
-          name="currentlyStudying"
+          name="currentlyWorking"
           render={({ field }) => (
             <FormItem className="flex gap-2 items-center">
               <FormControl>
@@ -248,7 +182,7 @@ export default function EducationForm() {
                   }}
                 />
               </FormControl>
-              <FormLabel className="text-sm">Currently studying</FormLabel>
+              <FormLabel className="text-sm">Currently working in this role</FormLabel>
             </FormItem>
           )}
         />
@@ -257,9 +191,11 @@ export default function EducationForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>
+                Description <span className="text-destructive">*</span>
+              </FormLabel>
               <FormControl>
-                <Textarea rows={5} {...field} value={field.value || ''} />
+                <Textarea rows={5} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

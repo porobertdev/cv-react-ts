@@ -7,7 +7,7 @@ import { useReactToPrint } from 'react-to-print';
 import { toast } from 'sonner';
 
 export interface ResumeContextType {
-  resumeData: Partial<ResumeType>;
+  resumeData: ResumeType;
   updateResumeData: (data: Partial<ResumeType>) => void;
   resetData: () => void;
   pdf: {

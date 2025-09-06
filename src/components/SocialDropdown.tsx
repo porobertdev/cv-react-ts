@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { CirclePlus } from 'lucide-react';
-import type { SocialLink } from './ContactForm';
+import type { SocialLink } from './forms/ContactForm';
 
 interface SocialDropdownProps {
   socialLinks: SocialLink[];
@@ -18,7 +18,7 @@ interface SocialDropdownProps {
 }
 
 export function SocialDropdown({ socialLinks, updateSocialLinks }: SocialDropdownProps) {
-  console.log("🚀 ~ SocialDropdown ~ socialLinks:", socialLinks)
+  console.log('🚀 ~ SocialDropdown ~ socialLinks:', socialLinks);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -1,24 +1,14 @@
 'use-client';
 
-import { useResume } from '@/contexts/ResumeContext';
-import {
-  Briefcase,
-  DownloadIcon,
-  FolderGit2,
-  GraduationCap,
-  Mail,
-  RotateCcw,
-  Sparkles,
-  User2,
-} from 'lucide-react';
-import AboutForm from './AboutForm';
+import { Briefcase, FolderGit2, GraduationCap, Mail, Sparkles, User2 } from 'lucide-react';
+import ActionPanel from './ActionPanel';
 import AutoSaveBadge from './AutoSaveBadge';
-import ContactForm from './ContactForm';
-import EducationForm from './EducationForm';
-import ExperienceForm from './ExperienceForm';
-import ProjectsForm from './ProjectsForm';
-import SkillsForm from './SkillsForm';
-import { Button } from './ui/button';
+import AboutForm from './forms/AboutForm';
+import ContactForm from './forms/ContactForm';
+import EducationForm from './forms/EducationForm';
+import ExperienceForm from './forms/ExperienceForm';
+import ProjectsForm from './forms/ProjectsForm';
+import SkillsForm from './forms/SkillsForm';
 import { Card, CardContent, CardTitle } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
@@ -53,9 +43,7 @@ function TabTitle(props: { title: string }) {
   );
 }
 
-export default function ControlPanel(props) {
-  const { pdf, resetData } = useResume();
-
+export default function ControlPanel() {
   return (
     /*     <Sidebar
     className=' px-4'
@@ -100,38 +88,7 @@ export default function ControlPanel(props) {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <Card className="p-2 mb-8">
-              <CardContent className="p-0 flex flex-col gap-4">
-                <Button
-                  variant="secondary"
-                  className="w-10 h-10 rounded-full cursor-pointer"
-                  onClick={() => pdf.print()}
-                >
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <DownloadIcon />
-                    </TooltipTrigger>
-                    <TooltipContent className="mb-4">
-                      <p>Download</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="w-10 h-10 rounded-full"
-                  onClick={() => resetData()}
-                >
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <RotateCcw />
-                    </TooltipTrigger>
-                    <TooltipContent className="mb-4">
-                      <p>Reset resume data</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </Button>
-              </CardContent>
-            </Card>
+            <ActionPanel />
           </div>
 
           {/* TAB CONTENT */}

@@ -14,15 +14,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Globe, PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import CardList from './CardList';
-import ModalEdit from './ModalEdit';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
-import { ScrollArea } from './ui/scroll-area';
-import { Textarea } from './ui/textarea';
+import CardList from '../CardList';
+import ModalEdit from '../ModalEdit';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Textarea } from '../ui/textarea';
 
 const popularTechnologies: string[] = [
   // Web Development (Frontend)
@@ -121,64 +121,35 @@ const popularTechnologies: string[] = [
   'Raspberry Pi',
 ];
 
-export default function ProjectsForm(props) {
-  const { resumeData, updateResumeData } = useResume();
+export default function ProjectsForm() {
+  const { resumeData } = useResume();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const { projects } = resumeData;
 
   const form = useForm<ProjectType>({
-    defaultValues: {
-      ...(projects
-        ? projects[0]
-        : {
-            name: '',
-            description: 'aaaaaaa',
-            links: {
-              git: '',
-              live: '',
-            },
-            technologies: [],
-          }),
-    },
     resolver: zodResolver(ProjectSchema),
+    defaultValues: {
+      ...projects?.[0],
+    },
     mode: 'onChange',
   });
 
-  const { handleEdit } = useModalEdit(form, 'projects');
+  const { handleEdit } = useModalEdit({ form, key: 'projects' });
 
   // TODO: use useFieldArray hook?
   const formValues = form.getValues();
   console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
 
   const addTechnology = (tech: string) => {
-    // form.setValue('technologies', [...(formValues.technologies || []), tech]);
-    form.reset({
-      name: '',
-      description: 'aaaaaaa',
-      links: {
-        git: '',
-        live: '',
-      },
-      technologies: [],
-    });
+    form.setValue('technologies', [...(formValues.technologies || []), tech]);
 
     console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
-    // setIsEditing(false);
   };
 
-  /* const editProject = (index: number) => {
-    setIsEditing(true);
-    const project = projects[index];
-    console.log('🚀 ~ editProject ~ project:', project);
-    form.reset(project);
-    setEditIndex(index);
-    setIsModalOpen(true);
-}; */
-
   useEffect(() => {
-    form.reset(projects);
-  }, [resumeData]);
+    form.reset(projects?.[0]);
+  }, [resumeData, form, projects]);
 
   return (
     <>
@@ -191,7 +162,7 @@ export default function ProjectsForm(props) {
             <div key={project.id || `project-${index}`} className="mb-4">
               <CardList
                 {...{
-                  onClick: () => handleEdit(index, form, 'projects'),
+                  onClick: () => handleEdit(index, { form, key: 'projects' }),
                   title: project.name,
                   content: <span className="text-xs text-muted-foreground"></span>,
                   // footer: (
@@ -217,7 +188,7 @@ export default function ProjectsForm(props) {
               git: '',
               live: '',
             },
-            technologies: [],
+            technologies: ['React'],
           },
         }}
       >
@@ -262,7 +233,7 @@ export default function ProjectsForm(props) {
         <FormField
           control={form.control}
           name="links"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Links</FormLabel>
               <FormControl>
@@ -317,7 +288,7 @@ export default function ProjectsForm(props) {
         <FormField
           control={form.control}
           name="technologies"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Technologies</FormLabel>
               <FormControl>
@@ -330,7 +301,7 @@ export default function ProjectsForm(props) {
                         <Card className="bg-muted">
                           <CardContent className="flex items-center gap-4 max-w-full">
                             <div className="flex gap-2 flex-wrap">
-                              {formValues.technologies.length > 0 &&
+                              {formValues.technologies &&
                                 formValues.technologies?.map((tech: string) => (
                                   <Badge
                                     //  variant='secondary'

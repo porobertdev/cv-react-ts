@@ -1,30 +1,30 @@
 import js from '@eslint/js';
-import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import { globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint
-  .config([
-    globalIgnores(['dist']),
-    {
-      files: ['**/*.{ts,tsx}'],
-      extends: [
-        js.configs.recommended,
-        tseslint.configs.recommended,
-        reactHooks.configs['recommended-latest'],
-        reactRefresh.configs.vite,
-      ],
-      languageOptions: {
-        ecmaVersion: 2020,
-        globals: globals.browser,
-      },
-      rules: {
-        'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-        'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      },
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
     },
-  ])
-  // .concat(eslintPluginPrettier);
+    rules: {
+      // 'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    },
+  },
+]);
+// .concat(eslintPluginPrettier);

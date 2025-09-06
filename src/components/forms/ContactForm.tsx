@@ -3,13 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, type ReactNode } from 'react';
 import { useFieldArray, useForm, type FieldArrayWithId } from 'react-hook-form';
 import { z } from 'zod';
-import { SocialDropdown } from './SocialDropdown';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
+import { SocialDropdown } from '../SocialDropdown';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Input } from '../ui/input';
 
 import { useResume } from '@/contexts/ResumeContext';
 import { Facebook, Github, Globe, Instagram, Linkedin, Trash, Twitter } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 export interface SocialLink {
   platform: PlatformType;
@@ -64,7 +64,6 @@ export default function AboutForm() {
   };
 
   const updateSocialLinks = (link: SocialLink) => {
-    console.log('🚀 ~ updateSocialLinks ~ link:', link);
     replace([...formLinkFields, link]);
   };
 
@@ -75,7 +74,7 @@ export default function AboutForm() {
 
   useEffect(() => {
     form.reset(contact);
-  }, [resumeData]);
+  }, [resumeData, form, contact]);
 
   return (
     <Form {...form}>

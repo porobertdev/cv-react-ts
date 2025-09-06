@@ -1,4 +1,4 @@
-import type { ResumeType } from '@/schemas/schemas';
+import type { FormDataTypes } from '@/schemas/schemas';
 import { createContext, useContext, useState } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { useResume } from './ResumeContext';
@@ -8,7 +8,7 @@ interface ModalContextProps {
   isEditing: boolean;
   editIndex: number | null;
   isModalOpen: boolean;
-  handleEdit: (index: number, form: UseFormReturn, formKey: keyof ResumeType) => void;
+  handleEdit: <K extends keyof FormDataTypes>(index: number, form: FormDataProps<K>) => void;
 
   // setters
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,16 +21,16 @@ interface ModalProviderProps {
   readonly children: React.ReactNode;
 }
 
-interface ModalEditHookProps {
-  form?: UseFormReturn<FormData>;
-  key?: keyof ResumeType;
+interface FormDataProps<K extends keyof FormDataTypes> {
+  form?: UseFormReturn<FormDataTypes[K]>;
+  key?: K;
   // resetFields: FormDataTypes,
 }
 const ModalContext = createContext<ModalContextProps | null>(null);
 
-export const useModalEdit = (props?: ModalEditHookProps) => {
+export const useModalEdit = <K extends keyof FormDataTypes>(props?: FormDataProps<K>) => {
+  //
   const ctx = useContext(ModalContext);
-  console.log('🚀 ~ useModalEdit ~ ctx:', ctx);
   if (!ctx) throw new Error('useModalEdit must be used inside ModalProvider');
 
   const { form, key } = props ?? {};
@@ -41,7 +41,7 @@ export const useModalEdit = (props?: ModalEditHookProps) => {
     return {
       ...ctx,
       // thanks stupid Copilot for  idea
-      handleEdit: (index: number) => ctx.handleEdit(index, form, key),
+      handleEdit: (index: number) => ctx.handleEdit(index, { form, key }),
     };
   } else {
     return ctx;
@@ -55,21 +55,28 @@ export default function ModalProvider({ children }: ModalProviderProps) {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const handleEdit = (index: number, form: UseFormReturn, formKey: keyof ResumeType) => {
+  const handleEdit: ModalContextProps['handleEdit'] = <K extends keyof FormDataTypes>(
+    index: number,
+    formData: FormDataProps<K>,
+  ) => {
     setIsModalOpen(true);
     setIsEditing(true);
     setEditIndex(index);
     let data;
 
-    if (Array.isArray(resumeData[formKey])) {
-      data = resumeData[formKey][index];
-    } else {
-      data = resumeData[formKey];
-    }
+    const { form, key } = formData;
 
-    form.reset({
-      ...data,
-    });
+    if (form && key) {
+      if (Array.isArray(resumeData[key])) {
+        data = resumeData[key][index];
+      } else {
+        data = resumeData[key];
+      }
+
+      form.reset({
+        ...data,
+      });
+    }
   };
 
   return (

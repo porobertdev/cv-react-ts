@@ -1,14 +1,14 @@
 import { useResume } from '@/contexts/ResumeContext';
-import { AboutSchema, type AboutType } from '@/schemas/schemas';
+import { AboutSchema } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Avatar } from './ui/avatar';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
+import { Avatar } from '../ui/avatar';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 export default function AboutForm() {
   const { resumeData, updateResumeData } = useResume();
@@ -25,9 +25,7 @@ export default function AboutForm() {
     mode: 'onChange',
   });
 
-  const schemaKeys = Object.keys(AboutSchema.shape) as (keyof AboutType)[];
-  console.log('🚀 ~ AboutForm ~ AboutSchema:', AboutSchema);
-  console.log('🚀 ~ AboutForm ~ schemaKeys:', schemaKeys);
+  // const schemaKeys = Object.keys(AboutSchema.shape) as (keyof AboutType)[];
 
   const handleFormChange = () => {
     updateResumeData({ about: form.getValues() });
@@ -35,7 +33,7 @@ export default function AboutForm() {
 
   useEffect(() => {
     form.reset(about);
-  }, [resumeData]);
+  }, [resumeData, about, form]);
 
   return (
     <Form {...form}>
@@ -81,8 +79,6 @@ export default function AboutForm() {
                       onBlur={field.onBlur}
                       name={field.name}
                       ref={field.ref}
-                      // className="text-sm text-stone-500 file:mr-5 file:py-1 file:px-3 file:border-[1px] file:text-xs file:font-medium file:bg-stone-50 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-700"
-                      // className="file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500"
                     />
                   </FormControl>
                 </div>

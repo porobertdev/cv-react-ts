@@ -4,50 +4,48 @@ import { SkillLevelEnum, SkillSchema, SkillTypeEnum, type SkillType } from '@/sc
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import CardList from './CardList';
-import ModalEdit from './ModalEdit';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-import { Button } from './ui/button';
+import CardList from '../CardList';
+import ModalEdit from '../ModalEdit';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
+} from '../ui/dropdown-menu';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Input } from '../ui/input';
 
 export default function SkillsForm() {
   const { resumeData } = useResume();
   const { skills } = resumeData;
 
-  const form = useForm(
-    // <{skills: SkillType[];}>
-    {
-      resolver: zodResolver(SkillSchema),
-      defaultValues: resumeData.skills[0] || [],
-      mode: 'onChange',
-    },
-  );
+  const form = useForm<SkillType>({
+    resolver: zodResolver(SkillSchema),
+    defaultValues: skills?.[0],
+    mode: 'onChange',
+  });
 
   const { handleEdit } = useModalEdit({ form, key: 'skills' });
 
   useEffect(() => {
-    form.reset(skills);
-  }, [resumeData]);
+    form.reset(skills?.[0]);
+  }, [resumeData, form, skills]);
 
   return (
     <>
       {/* SKILL LIST */}
       <div className="flex flex-col gap-4">
         {Object.values(SkillTypeEnum.enum).map((type) => (
-          <>
-            <Accordion type="single" collapsible>
-              <AccordionItem value="item-1">
-                <AccordionTrigger>{type}</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-4">
-                  {skills
+          <Accordion type="single" collapsible key={type}>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>{type}</AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4">
+                {skills &&
+                  skills.length > 0 &&
+                  skills
                     .filter((skill: SkillType) => skill.type === type)
                     .map((skill: SkillType) => {
                       const index = skills.findIndex((item) => item.name === skill.name);
@@ -57,32 +55,22 @@ export default function SkillsForm() {
                           {/* <div className="flex justify-between items-center"> */}
                           <CardList
                             {...{
-                              onClick: () => handleEdit(index, form, 'skills'),
+                              onClick: () => handleEdit(index, { form, key: 'skills' }),
                               title: skill.name,
                               content: (
                                 <span className="text-xs text-muted-foreground italic text-left">
                                   {skill.proficiency}
                                 </span>
                               ),
-                              // footer: (
-                              //   <Button variant="ghost" onClick={() => handleEdit(index)}>
-                              //     <Pencil />
-                              //   </Button>
-                              // ),
                             }}
                           />
                           {/* </div> */}
                         </div>
                       );
                     })}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            {/* <div className="">
-                <CardTitle className="text-lg text-left mb-4">{type}</CardTitle>
-                <Separator className="mb-8" />
-              </div> */}
-          </>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         ))}
       </div>
 

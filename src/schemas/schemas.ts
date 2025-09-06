@@ -50,7 +50,7 @@ export const ExperienceSchema = z
     startDate: z.string().min(1, 'Start date is required'),
     endDate: z.string().optional(),
     description: z.string().min(1, 'Description is required'),
-    currentlyWorking: z.boolean().default(false),
+    currentlyWorking: z.boolean().default(false).optional(),
   })
   .refine(
     (data) =>
@@ -117,7 +117,15 @@ export type SkillType = z.infer<typeof SkillSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ResumeType = z.infer<typeof ResumeSchema>;
 export type PlatformType = z.infer<typeof PlatformEnum>;
-export type FormDataTypes =
+export interface FormDataTypes {
+  about: AboutType;
+  contact: ContactType;
+  experience: ExperienceType;
+  education: EducationType;
+  skills: SkillType;
+  projects: ProjectType;
+}
+export type FormDataTypesUnion =
   | AboutType
   | ContactType
   | ExperienceType
