@@ -17,8 +17,8 @@ export default function Template({ name }: Template) {
 
   return (
     <ScrollArea>
-      <div className="scale-95 origin-top mr-4 h-[5rem]">
-        <div className="shadow-2xl p-0.5">
+      <div className="mr-4 h-[5rem] origin-top scale-95">
+        <div className="p-0.5 shadow-2xl">
           <div ref={pdf.ref}>
             <style>
               {`@page { size: A4 portrait; margin: 0; }

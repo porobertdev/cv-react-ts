@@ -35,7 +35,7 @@ export default function ExperienceForm() {
   return (
     <>
       {/* EXPERIENCE LIST */}
-      <ScrollArea className="h-80 mb-8">
+      <ScrollArea className="mb-8 h-80">
         <div className="flex flex-col gap-4">
           {resumeData.experience?.map((job: ExperienceType, index: number) => (
             <div key={job.id || `job-${index}`}>
@@ -46,7 +46,7 @@ export default function ExperienceForm() {
                   },
                   title: job.company,
                   content: (
-                    <span className="text-xs text-muted-foreground italic text-left">
+                    <span className="text-muted-foreground text-left text-xs italic">
                       {formatDate(job.startDate)} -{' '}
                       {job.currentlyWorking ? 'Present' : formatDate(job.endDate)}
                     </span>
@@ -124,7 +124,7 @@ export default function ExperienceForm() {
             </FormItem>
           )}
         />
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <FormField
             control={form.control}
             name="startDate"
@@ -172,7 +172,7 @@ export default function ExperienceForm() {
           control={form.control}
           name="currentlyWorking"
           render={({ field }) => (
-            <FormItem className="flex gap-2 items-center">
+            <FormItem className="flex items-center gap-2">
               <FormControl>
                 <Checkbox
                   checked={field.value}

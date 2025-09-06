@@ -26,7 +26,7 @@ export function SocialDropdown({ socialLinks, updateSocialLinks }: SocialDropdow
           <CirclePlus />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-max flex gap-1">
+      <DropdownMenuContent className="flex min-w-max gap-1">
         {socialLinks.map((link: SocialLink, index: number) => {
           const IconComp = link.icon;
 

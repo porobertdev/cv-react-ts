@@ -33,7 +33,7 @@ export default function EducationForm() {
   return (
     <>
       {/* EDUCATION LIST */}
-      <ScrollArea className="h-60 mb-8">
+      <ScrollArea className="mb-8 h-60">
         <div className="flex flex-col gap-4">
           {education?.map((edu: EducationType, index: number) => (
             <div key={edu.id || `edu-${index}`}>
@@ -42,7 +42,7 @@ export default function EducationForm() {
                   onClick: () => handleEdit(index, { form, key: 'education' }),
                   title: edu.institution,
                   content: (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       {formatDate(edu.startDate)} -{' '}
                       {edu.currentlyStudying ? 'Present' : formatDate(edu.endDate)}
                     </span>
@@ -113,7 +113,7 @@ export default function EducationForm() {
             </FormItem>
           )}
         />
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <FormField
             control={form.control}
             name="startDate"
@@ -161,7 +161,7 @@ export default function EducationForm() {
           control={form.control}
           name="currentlyStudying"
           render={({ field }) => (
-            <FormItem className="flex gap-2 items-center">
+            <FormItem className="flex items-center gap-2">
               <FormControl>
                 <Checkbox
                   checked={field.value}

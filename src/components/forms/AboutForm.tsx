@@ -50,10 +50,10 @@ export default function AboutForm() {
                     <span className="text-destructive">*</span>
                   )}
                 </FormLabel>
-                <div className="flex gap-4 justify-center items-center">
-                  <Avatar className="w-10 h-10">
+                <div className="flex items-center justify-center gap-4">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={fileSrc} />
-                    <AvatarFallback className="bg-muted-foreground w-full text-white flex justify-center items-center">
+                    <AvatarFallback className="bg-muted-foreground flex w-full items-center justify-center text-white">
                       Pic
                     </AvatarFallback>
                   </Avatar>

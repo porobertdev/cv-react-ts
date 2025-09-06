@@ -4,11 +4,15 @@ export default function CardList(item) {
   console.log('🚀 ~ CardList ~ item:', item);
 
   return (
-    <Card key={item.title} className='py-4 px-4 gap-2 hover:bg-muted cursor-pointer' onClick={item.onClick}>
-      <CardHeader className="rounded-sm flex-row justify-between w-full p-0">
+    <Card
+      key={item.title}
+      className="hover:bg-muted cursor-pointer gap-2 px-4 py-4"
+      onClick={item.onClick}
+    >
+      <CardHeader className="w-full flex-row justify-between rounded-sm p-0">
         <CardTitle className="text-md flex items-center">{item.title}</CardTitle>
       </CardHeader>
-      <CardContent className="text-sm p-0 flex gap-12 items-center w-full">
+      <CardContent className="flex w-full items-center gap-12 p-0 text-sm">
         {item.content}
       </CardContent>
       <CardFooter>{item.footer}</CardFooter>

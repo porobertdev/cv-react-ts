@@ -25,12 +25,12 @@ export function SortableBadge({ id, onRemove }: SortableBadgeProps) {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Badge
         variant="secondary"
-        className="py-2 rounded-lg shadow-md border-1 border-gray-300 flex items-center gap-1"
+        className="flex items-center gap-1 rounded-lg border-1 border-gray-300 py-2 shadow-md"
       >
         {id}
         <Button
           type="button"
-          className="p-0 m-0 bg-inherit text-black hover:bg-inherit hover:text-primary h-max"
+          className="hover:text-primary m-0 h-max bg-inherit p-0 text-black hover:bg-inherit"
           onClick={() => onRemove(id)}
         >
           <XIcon />

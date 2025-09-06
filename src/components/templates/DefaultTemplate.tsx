@@ -7,19 +7,19 @@ export default function DefaultTemplate(data: ResumeType) {
   console.log('🚀 ~ DefaultTemplate ~ experience:', experience);
 
   return (
-    <Card className="p-0 flex-row gap-0 default-template rounded-none">
+    <Card className="default-template flex-row gap-0 rounded-none p-0">
       {/* LEFT */}
-      <Card className="w-1/2 p-0 border-none shadow-none gap-0">
+      <Card className="w-1/2 gap-0 border-none p-0 shadow-none">
         {/* TOP */}
-        <CardHeader className="p-0 h-max gap-0">
+        <CardHeader className="h-max gap-0 p-0">
           <img src={about?.profilePic} alt="profile pic" />
         </CardHeader>
         {/* BOTTOM */}
-        <CardFooter className="bg-card-foreground items-start text-card !h-full">
-          <CardContent className="p-4 mt-10">
+        <CardFooter className="bg-card-foreground text-card !h-full items-start">
+          <CardContent className="mt-10 p-4">
             <div className="flex flex-col gap-8">
               <div className="text-left">
-                <h2 className="text-3xl font-bold mb-4">Contact</h2>
+                <h2 className="mb-4 text-3xl font-bold">Contact</h2>
                 <p>
                   E-mail: <a href={`mailto:${contact?.email}`}>{contact?.email}</a>
                 </p>
@@ -38,11 +38,11 @@ export default function DefaultTemplate(data: ResumeType) {
               </div>
 
               <div className="text-left">
-                <h2 className="text-3xl font-bold mb-4">References</h2>
+                <h2 className="mb-4 text-3xl font-bold">References</h2>
               </div>
 
               <div className="text-left">
-                <h2 className="text-3xl font-bold mb-4">Skills</h2>
+                <h2 className="mb-4 text-3xl font-bold">Skills</h2>
 
                 <ul className="list-disc px-4">
                   {skills?.map((skill) => (
@@ -56,23 +56,23 @@ export default function DefaultTemplate(data: ResumeType) {
       </Card>
 
       {/* RIGHT */}
-      <Card className="w-full text-left p-0 border-none bg-muted shadow-none px-4 py-8 rounded-none">
+      <Card className="bg-muted w-full rounded-none border-none p-0 px-4 py-8 text-left shadow-none">
         <CardHeader className="flex flex-col gap-8">
-          <h1 className="text-6xl mt-10 font-bold">
+          <h1 className="mt-10 text-6xl font-bold">
             {about.fName} {about.lName}
           </h1>
 
           {about.position && (
-            <div className="flex flex-col gap-4 w-full">
+            <div className="flex w-full flex-col gap-4">
               <h2 className="text-xl font-light">{about.position.toUpperCase()}</h2>
-              <Separator className="h-1.5! bg-card-foreground" />
+              <Separator className="bg-card-foreground h-1.5!" />
             </div>
           )}
         </CardHeader>
 
         <CardContent className="flex flex-col gap-14">
           <div className="summary flex gap-12">
-            <div className="w-1/2 flex flex-col gap-4">
+            <div className="flex w-1/2 flex-col gap-4">
               <h2 className="text-3xl font-bold">Personal Summary</h2>
               <p>{about.intro}</p>
             </div>
@@ -88,12 +88,12 @@ export default function DefaultTemplate(data: ResumeType) {
           </div>
 
           <div className="experience">
-            <h2 className="text-3xl font-bold mb-4">Professional Experience</h2>
+            <h2 className="mb-4 text-3xl font-bold">Professional Experience</h2>
 
             <div className="jobs-list flex flex-col gap-8">
               {experience?.map((job) => (
                 <div key={job.jobTitle} className="flex gap-12">
-                  <div className="w-1/2 flex flex-col gap-4">
+                  <div className="flex w-1/2 flex-col gap-4">
                     <h3 className="text-xl font-bold">{job.jobTitle}</h3>
                     <p className="italic">
                       {job.company}
@@ -110,12 +110,12 @@ export default function DefaultTemplate(data: ResumeType) {
           </div>
 
           <div className="education">
-            <h2 className="text-3xl font-bold mb-4">Academic Background</h2>
+            <h2 className="mb-4 text-3xl font-bold">Academic Background</h2>
 
             <div className="jobs-list flex flex-col gap-8">
               {education.map((item) => (
                 <div key={item.institution} className="flex gap-12">
-                  <div className="w-1/2 flex flex-col gap-4">
+                  <div className="flex w-1/2 flex-col gap-4">
                     <h3 className="text-xl font-bold">{item.institution}</h3>
                     <p className="italic">
                       {item.fieldOfStudy}

@@ -8,11 +8,11 @@ export default function ActionPanel() {
   const { pdf, resetData } = useResume();
 
   return (
-    <Card className="p-2 mb-8">
-      <CardContent className="p-0 flex flex-col gap-4">
+    <Card className="mb-8 p-2">
+      <CardContent className="flex flex-col gap-4 p-0">
         <Button
           variant="secondary"
-          className="w-10 h-10 rounded-full cursor-pointer"
+          className="h-10 w-10 cursor-pointer rounded-full"
           onClick={() => pdf.print()}
         >
           <Tooltip>
@@ -24,7 +24,7 @@ export default function ActionPanel() {
             </TooltipContent>
           </Tooltip>
         </Button>
-        <Button variant="secondary" className="w-10 h-10 rounded-full" onClick={() => resetData()}>
+        <Button variant="secondary" className="h-10 w-10 rounded-full" onClick={() => resetData()}>
           <Tooltip>
             <TooltipTrigger>
               <RotateCcw />

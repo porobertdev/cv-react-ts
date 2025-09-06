@@ -174,7 +174,7 @@ export default function ProjectsForm() {
                 {...{
                   onClick: () => handleEdit(index, { form, key: 'projects' }),
                   title: project.name,
-                  content: <span className="text-xs text-muted-foreground"></span>,
+                  content: <span className="text-muted-foreground text-xs"></span>,
                   // footer: (
                   //   <Button variant="ghost" onClick={() => handleEdit(index)}>
                   //     <Pencil />
@@ -306,8 +306,8 @@ export default function ProjectsForm() {
             <FormItem>
               <FormLabel>Technologies</FormLabel>
               <FormControl>
-                <Card className="bg-inherit shadow-none border-none p-0">
-                  <CardContent className="flex items-center p-0 gap-4 max-w-full">
+                <Card className="border-none bg-inherit p-0 shadow-none">
+                  <CardContent className="flex max-w-full items-center gap-4 p-0">
                     {technologies && (
                       <DndContext
                         sensors={sensors}
@@ -325,7 +325,7 @@ export default function ProjectsForm() {
                           items={technologies || []}
                           strategy={horizontalListSortingStrategy}
                         >
-                          <div className="flex gap-2 flex-wrap">
+                          <div className="flex flex-wrap gap-2">
                             {technologies?.map((tech: string) => (
                               <SortableBadge key={tech} id={tech} onRemove={removeTechnology} />
                             ))}

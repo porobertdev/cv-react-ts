@@ -58,7 +58,7 @@ export default function SkillsForm() {
                               onClick: () => handleEdit(index, { form, key: 'skills' }),
                               title: skill.name,
                               content: (
-                                <span className="text-xs text-muted-foreground italic text-left">
+                                <span className="text-muted-foreground text-left text-xs italic">
                                   {skill.proficiency}
                                 </span>
                               ),

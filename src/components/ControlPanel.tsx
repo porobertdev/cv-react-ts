@@ -21,23 +21,23 @@ const tabItems = [
     label: 'About',
     icon: (
       <User2
-        className="!w-full !h-full"
+        className="!h-full !w-full"
         // size={20} width={20} height={20}
       />
     ),
   },
-  { value: 'contact', label: 'Contact', icon: <Mail className="!w-full !h-full" /> },
-  { value: 'experience', label: 'Experience', icon: <Briefcase className="!w-full !h-full" /> },
-  { value: 'education', label: 'Education', icon: <GraduationCap className="!w-full !h-full" /> },
-  { value: 'skills', label: 'Skills', icon: <Sparkles className="!w-full !h-full" /> },
-  { value: 'projects', label: 'Projects', icon: <FolderGit2 className="!w-full !h-full" /> },
+  { value: 'contact', label: 'Contact', icon: <Mail className="!h-full !w-full" /> },
+  { value: 'experience', label: 'Experience', icon: <Briefcase className="!h-full !w-full" /> },
+  { value: 'education', label: 'Education', icon: <GraduationCap className="!h-full !w-full" /> },
+  { value: 'skills', label: 'Skills', icon: <Sparkles className="!h-full !w-full" /> },
+  { value: 'projects', label: 'Projects', icon: <FolderGit2 className="!h-full !w-full" /> },
 ];
 
 function TabTitle(props: { title: string }) {
   return (
     <>
       <AutoSaveBadge />
-      <CardTitle className="text-3xl text-left mb-4">{props.title}</CardTitle>
+      <CardTitle className="mb-4 text-left text-3xl">{props.title}</CardTitle>
       <Separator className="mb-8" />
     </>
   );
@@ -70,13 +70,13 @@ export default function ControlPanel() {
         className="w-full"
         //  activationMode='automatic'
       >
-        <div className="flex gap-4 h-screen">
+        <div className="flex h-screen gap-4">
           <div className="flex flex-col gap-4">
-            <TabsList className="px-2 py-2 shadow-sm justify-center flex-col gap-6 bg-white h-max">
+            <TabsList className="h-max flex-col justify-center gap-6 bg-white px-2 py-2 shadow-sm">
               {tabItems.map(({ value, label, icon }) => (
                 <TabsTrigger
                   key={value}
-                  className="p-2 w-10 h-10 rounded-full hover:bg-primary hover:text-accent transition-all duration-200 data-[state=active]:bg-primary! data-[state=active]:text-accent! hover:scale-110"
+                  className="hover:bg-primary hover:text-accent data-[state=active]:bg-primary! data-[state=active]:text-accent! h-10 w-10 rounded-full p-2 transition-all duration-200 hover:scale-110"
                   value={value}
                 >
                   <Tooltip>

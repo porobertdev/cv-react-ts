@@ -10,8 +10,8 @@ function App() {
   return (
     <ResumeProvider>
       <Toaster position="top-center" />
-      <div className="flex gap-4 justify-start w-screen fixed top-8">
-        <SidebarProvider className="w-1/2 h-screen flex-col text-left">
+      <div className="fixed top-8 flex w-screen justify-start gap-4">
+        <SidebarProvider className="h-screen w-1/2 flex-col text-left">
           <ModalProvider>
             <ControlPanel />
           </ModalProvider>
