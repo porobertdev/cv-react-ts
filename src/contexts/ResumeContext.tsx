@@ -45,7 +45,7 @@ export const ResumeProvider = ({ children }: { children: React.ReactNode }) => {
   const resetData = () => {
     setResumeData(DEFAULT_RESUME_DATA);
     toast('All resume data restored to default', {
-      icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+      icon: <CheckCircle className="w-6 h-6 fill-green-500 text-white" />,
       className: 'max-w-max',
       // action: {
       //   label: 'Undo',
