@@ -10,15 +10,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { ProjectSchema, type ProjectType } from '@/schemas/schemas';
-import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GithubIcon, Globe, PlusCircle } from 'lucide-react';
+import { GithubIcon, Globe, PlusCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from '../CardList';
 import ModalEdit from '../ModalEdit';
-import { SortableBadge } from '../SortableBadge';
+import { SortableItem } from '../SortableItem';
+import { SortableList } from '../SortableList';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -126,8 +126,6 @@ const popularTechnologies: string[] = [
 export default function ProjectsForm() {
   const { resumeData } = useResume();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
-  const sensor = useSensor(PointerSensor);
-  const sensors = useSensors(sensor);
 
   const { projects } = resumeData;
 
@@ -309,61 +307,63 @@ export default function ProjectsForm() {
                 <Card className="border-none bg-inherit p-0 shadow-none">
                   <CardContent className="flex max-w-full items-center gap-4 p-0">
                     {technologies && (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={({ active, over }) => {
-                          if (over && active.id !== over.id) {
-                            const oldIndex = technologies.findIndex((tech) => tech === active.id);
-                            const newIndex = technologies.findIndex((tech) => tech === over.id);
-                            const newOrder = arrayMove(technologies, oldIndex, newIndex);
-                            form.setValue('technologies', newOrder);
-                          }
-                        }}
+                      <SortableList
+                        items={technologies}
+                        onChange={(newOrder) => form.setValue('technologies', newOrder)}
+                        strategy="horizontal"
                       >
-                        <SortableContext
-                          items={technologies || []}
-                          strategy={horizontalListSortingStrategy}
-                        >
-                          <div className="flex flex-wrap gap-2">
-                            {technologies?.map((tech: string) => (
-                              <SortableBadge key={tech} id={tech} onRemove={removeTechnology} />
-                            ))}
-
-                            {/* Add button */}
-                            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                              <PopoverTrigger asChild>
-                                <Button size="icon">
-                                  <PlusCircle />
+                        <div className="flex flex-wrap gap-2">
+                          {technologies.map((tech) => (
+                            <SortableItem key={tech} id={tech}>
+                              <Badge
+                                variant="secondary"
+                                className="flex items-center gap-1 rounded-lg border-1 border-gray-300 py-2 shadow-md"
+                              >
+                                {tech}
+                                <Button
+                                  type="button"
+                                  className="hover:text-primary m-0 h-max bg-inherit p-0 text-black hover:bg-inherit"
+                                  onClick={() => removeTechnology(tech)}
+                                >
+                                  <XIcon />
                                 </Button>
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <Command>
-                                  <CommandInput placeholder="Select technology..." />
-                                  <CommandList>
-                                    <CommandEmpty>No results found.</CommandEmpty>
-                                    <CommandGroup>
-                                      {popularTechnologies
-                                        .filter((tech) => !technologies?.includes(tech))
-                                        .map((tech) => (
-                                          <CommandItem
-                                            key={tech}
-                                            onSelect={() => {
-                                              addTechnology(tech);
-                                              setIsPopoverOpen(false);
-                                            }}
-                                          >
-                                            {tech}
-                                          </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                  </CommandList>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                        </SortableContext>
-                      </DndContext>
+                              </Badge>
+                            </SortableItem>
+                          ))}
+
+                          {/* Add button */}
+                          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                            <PopoverTrigger asChild>
+                              <Button size="icon">
+                                <PlusCircle />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <Command>
+                                <CommandInput placeholder="Select technology..." />
+                                <CommandList>
+                                  <CommandEmpty>No results found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {popularTechnologies
+                                      .filter((tech) => !technologies?.includes(tech))
+                                      .map((tech) => (
+                                        <CommandItem
+                                          key={tech}
+                                          onSelect={() => {
+                                            addTechnology(tech);
+                                            setIsPopoverOpen(false);
+                                          }}
+                                        >
+                                          {tech}
+                                        </CommandItem>
+                                      ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </SortableList>
                     )}
                   </CardContent>
                 </Card>
