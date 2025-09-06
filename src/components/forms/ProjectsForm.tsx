@@ -142,7 +142,7 @@ export default function ProjectsForm() {
   const { handleEdit } = useModalEdit({ form, key: 'projects' });
 
   // TODO: use useFieldArray hook?
-  const formValues = form.getValues();
+  const formValues = form.watch();
   console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
   const { technologies } = formValues;
 
@@ -155,9 +155,6 @@ export default function ProjectsForm() {
       'technologies',
       technologies?.filter((t) => t !== tech),
     );
-
-    // trigger form re-rendering to show the updated list of tech tags
-    form.trigger();
   };
 
   useEffect(() => {
