@@ -11,7 +11,7 @@ import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
 import { ProjectSchema, type ProjectType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GithubIcon, Globe, PlusCircle } from 'lucide-react';
+import { GithubIcon, Globe, PlusCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from '../CardList';
@@ -147,6 +147,16 @@ export default function ProjectsForm() {
     console.log('🚀 ~ ProjectsForm ~ formValues:', formValues);
   };
 
+  const removeTechnology = (tech: string) => {
+    form.setValue(
+      'technologies',
+      formValues.technologies?.filter((t) => t !== tech),
+    );
+
+    // trigger form re-rendering to show the updated list of tech tags
+    form.trigger();
+  };
+
   useEffect(() => {
     form.reset(projects?.[0]);
   }, [resumeData, form, projects]);
@@ -188,6 +198,10 @@ export default function ProjectsForm() {
               git: '',
               live: '',
             },
+            /*
+             if it's empty, then we get 'undefined' as first item,
+             and renders an empty div, failing form validation too.
+            */
             technologies: ['React'],
           },
         }}
@@ -298,18 +312,21 @@ export default function ProjectsForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Card className="bg-muted">
-                          <CardContent className="flex items-center gap-4 max-w-full">
+                        <Card className="bg-inherit shadow-none border-none p-0">
+                          <CardContent className="flex items-center p-0 gap-4 max-w-full">
                             <div className="flex gap-2 flex-wrap">
                               {formValues.technologies &&
                                 formValues.technologies?.map((tech: string) => (
                                   <Badge
-                                    //  variant='secondary'
-
-                                    className="py-2 rounded-lg bg-white text-primary shadow-md border-1 border-gray-300"
+                                    variant="secondary"
+                                    className="py-2 rounded-lg shadow-md border-1 border-gray-300"
                                     key={tech}
+                                    onClick={() => removeTechnology(tech)}
                                   >
                                     {tech}
+                                    <Button className='p-0! m-0! bg-inherit text-black hover:bg-inherit hover:text-primary h-max'>
+                                      <XIcon  />
+                                    </Button>
                                   </Badge>
                                 ))}
                               <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -334,7 +351,6 @@ export default function ProjectsForm() {
                                       <CommandGroup>
                                         {popularTechnologies
                                           .filter((tech: string) => {
-                                            console.log('zzzzzz', field.value);
                                             return !formValues.technologies?.includes(tech);
                                           })
                                           .map((tech: string) => (
