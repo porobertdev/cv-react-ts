@@ -159,7 +159,10 @@ export default function ModalEdit<TFormValues extends FieldValues>({
                 >
                   Cancel
                 </AlertDialogCancel>
-                <AlertDialogAction type="submit" disabled={!form.formState.isValid}>
+                <AlertDialogAction
+                  type="submit"
+                  disabled={!form.formState.isValid || !form.formState.isDirty}
+                >
                   {isEditing ? 'Update' : 'Add'}
                 </AlertDialogAction>
               </AlertDialogFooter>
