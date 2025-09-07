@@ -165,6 +165,7 @@ export default function AboutForm() {
                             </Button>
                           </div>
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
