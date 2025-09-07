@@ -3,9 +3,11 @@ import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
 import { EducationSchema, type EducationType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from '../CardList';
+import { DatePickerInput } from '../DatePickerInput';
 import ModalEdit from '../ModalEdit';
 import { Checkbox } from '../ui/checkbox';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -123,12 +125,7 @@ export default function EducationForm() {
                   Start Date <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
+                  <DatePickerInput field={field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,13 +141,14 @@ export default function EducationForm() {
                   {!form.watch('currentlyStudying') && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  {/* <Input
                     type="date"
                     {...field}
                     value={field.value || ''}
                     onChange={(e) => field.onChange(e.target.value)}
                     disabled={form.watch('currentlyStudying')}
-                  />
+                  /> */}
+                  <DatePickerInput field={field} disabled={form.watch('currentlyStudying')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -167,7 +165,13 @@ export default function EducationForm() {
                   checked={field.value}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
-                    if (checked) form.setValue('endDate', '');
+                    if (checked) {
+                      // Currently studying → clear endDate
+                      form.setValue('endDate', '');
+                    } else {
+                      // No longer studying → set a default endDate (today) or last selected date
+                      form.setValue('endDate', format(new Date(), 'yyyy-MM-dd'));
+                    }
                   }}
                 />
               </FormControl>

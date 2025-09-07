@@ -3,9 +3,11 @@ import { useResume } from '@/contexts/ResumeContext';
 import { formatDate } from '@/lib/utils';
 import { ExperienceSchema, type ExperienceType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CardList from '../CardList';
+import { DatePickerInput } from '../DatePickerInput';
 import ModalEdit from '../ModalEdit';
 import { Checkbox } from '../ui/checkbox';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -134,12 +136,7 @@ export default function ExperienceForm() {
                   Start Date <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
+                  <DatePickerInput field={field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -155,13 +152,7 @@ export default function ExperienceForm() {
                   {!form.watch('currentlyWorking') && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    disabled={form.watch('currentlyWorking')}
-                  />
+                  <DatePickerInput field={field} disabled={form.watch('currentlyWorking')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -178,7 +169,13 @@ export default function ExperienceForm() {
                   checked={field.value}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
-                    if (checked) form.setValue('endDate', '');
+                    if (checked) {
+                      // Currently working → clear endDate
+                      form.setValue('endDate', '');
+                    } else {
+                      // No longer working → set a default endDate (today) or last selected date
+                      form.setValue('endDate', format(new Date(), 'yyyy-MM-dd'));
+                    }
                   }}
                 />
               </FormControl>
