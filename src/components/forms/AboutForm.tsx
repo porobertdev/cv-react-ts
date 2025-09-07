@@ -169,7 +169,7 @@ export default function AboutForm() {
             <FormItem>
               <FormLabel>
                 Position
-                {AboutSchema.shape[field.name].safeParse(undefined).success && (
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
                   <span className="text-destructive">*</span>
                 )}
               </FormLabel>
@@ -188,7 +188,7 @@ export default function AboutForm() {
             <FormItem>
               <FormLabel>
                 Intro
-                {AboutSchema.shape[field.name].safeParse(undefined).success && (
+                {!AboutSchema.shape[field.name].safeParse(undefined).success && (
                   <span className="text-destructive">*</span>
                 )}
               </FormLabel>
