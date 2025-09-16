@@ -97,6 +97,7 @@ export const ProjectSchema = z.object({
     live: z.string().url().optional(),
     git: z.string().url().optional(),
   }),
+  type: z.enum(['FullStack', 'Frontend', 'Backend']).optional(),
   technologies: z.array(z.string().min(1).max(50)).optional(),
 });
 

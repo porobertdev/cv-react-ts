@@ -1,13 +1,15 @@
 import { useResume } from '@/contexts/ResumeContext';
 import { ScrollArea } from '../ui/scroll-area';
+import ClassicTemplate from './ClassicTemplate';
 import DefaultTemplate from './DefaultTemplate';
 
 interface Template {
-  name: 'default';
+  name: 'default' | 'classic';
 }
 
 const templates = {
   default: DefaultTemplate,
+  classic: ClassicTemplate,
 };
 
 export default function Template({ name }: Template) {
