@@ -1,5 +1,8 @@
+import { useResume } from '@/contexts/ResumeContext';
 import Template from './templates/Template';
 
 export default function ResumePreview() {
-  return <Template name="default" />;
+  const { resumeData } = useResume();
+
+  return <Template name={resumeData.settings?.name} />;
 }

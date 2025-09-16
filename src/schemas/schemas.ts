@@ -11,6 +11,7 @@ export const PlatformEnum = z.enum([
 ]);
 export const SkillLevelEnum = z.enum(['Beginner', 'Intermediate', 'Advanced', 'Expert']);
 export const SkillTypeEnum = z.enum(['Technical', 'Soft', 'Language', 'Other']);
+export const TemplateEnum = z.enum(['default', 'classic']);
 
 export const AboutSchema = z.object({
   profilePic: z
@@ -101,6 +102,10 @@ export const ProjectSchema = z.object({
   technologies: z.array(z.string().min(1).max(50)).optional(),
 });
 
+export const SettingsSchema = z.object({
+  name: TemplateEnum,
+});
+
 export const ResumeSchema = z.object({
   about: AboutSchema.optional(),
   contact: ContactSchema.optional(),
@@ -108,6 +113,7 @@ export const ResumeSchema = z.object({
   education: z.array(EducationSchema).optional(),
   skills: z.array(SkillSchema).optional(),
   projects: z.array(ProjectSchema).optional(),
+  settings: SettingsSchema,
 });
 
 export type AboutType = z.infer<typeof AboutSchema>;
@@ -116,6 +122,7 @@ export type ExperienceType = z.infer<typeof ExperienceSchema>;
 export type EducationType = z.infer<typeof EducationSchema>;
 export type SkillType = z.infer<typeof SkillSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
+export type SettingsType = z.infer<typeof SettingsSchema>;
 export type ResumeType = z.infer<typeof ResumeSchema>;
 export type PlatformType = z.infer<typeof PlatformEnum>;
 export interface FormDataTypes {

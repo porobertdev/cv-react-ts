@@ -121,6 +121,9 @@ const DEFAULT_RESUME_DATA: ResumeType = {
       technologies: ['React', 'Redux', 'Firebase', 'Framer Motion'],
     },
   ],
+  settings: {
+    name: 'default',
+  },
 };
 
 export { DEFAULT_RESUME_DATA };

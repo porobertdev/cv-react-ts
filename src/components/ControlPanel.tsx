@@ -1,6 +1,14 @@
 'use-client';
 
-import { Briefcase, FolderGit2, GraduationCap, Mail, Sparkles, User2 } from 'lucide-react';
+import {
+  Briefcase,
+  FolderGit2,
+  GraduationCap,
+  Mail,
+  Settings,
+  Sparkles,
+  User2,
+} from 'lucide-react';
 import ActionPanel from './ActionPanel';
 import AutoSaveBadge from './AutoSaveBadge';
 import AboutForm from './forms/AboutForm';
@@ -8,6 +16,7 @@ import ContactForm from './forms/ContactForm';
 import EducationForm from './forms/EducationForm';
 import ExperienceForm from './forms/ExperienceForm';
 import ProjectsForm from './forms/ProjectsForm';
+import SettingsForm from './forms/SettingsForm';
 import SkillsForm from './forms/SkillsForm';
 import { Card, CardContent, CardTitle } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
@@ -31,6 +40,7 @@ const tabItems = [
   { value: 'education', label: 'Education', icon: <GraduationCap className="!h-full !w-full" /> },
   { value: 'skills', label: 'Skills', icon: <Sparkles className="!h-full !w-full" /> },
   { value: 'projects', label: 'Projects', icon: <FolderGit2 className="!h-full !w-full" /> },
+  { value: 'settings', label: 'Settings', icon: <Settings className="!h-full !w-full" /> },
 ];
 
 function TabTitle(props: { title: string }) {
@@ -125,6 +135,11 @@ export default function ControlPanel() {
                 <TabsContent value="projects">
                   <TabTitle title="Projects" />
                   <ProjectsForm />
+                </TabsContent>
+
+                <TabsContent value="settings">
+                  <TabTitle title="Settings" />
+                  <SettingsForm />
                 </TabsContent>
               </CardContent>
             </ScrollArea>
