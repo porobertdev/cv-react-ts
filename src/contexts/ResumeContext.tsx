@@ -2,7 +2,7 @@ import { DEFAULT_RESUME_DATA } from '@/constants/constants';
 import type { ResumeType } from '@/schemas/schemas';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { CheckCircle } from 'lucide-react';
-import { createContext, useContext, useRef } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { toast } from 'sonner';
 
@@ -10,6 +10,8 @@ export interface ResumeContextType {
   resumeData: ResumeType;
   updateResumeData: (data: Partial<ResumeType>) => void;
   resetData: () => void;
+  activeEditTab: keyof ResumeType;
+  setActiveEditTab: (tab: string) => void;
   pdf: {
     ref: React.RefObject<HTMLDivElement | null>;
     print: () => void;
@@ -29,6 +31,8 @@ export const ResumeProvider = ({ children }: { children: React.ReactNode }) => {
     'resumeData',
     DEFAULT_RESUME_DATA,
   );
+  const [activeEditTab, setActiveEditTab] = useState<keyof ResumeType>('about');
+
   console.log('🚀 ~ ResumeProvider ~ resumeData:', resumeData);
 
   // PDF download
@@ -60,6 +64,8 @@ export const ResumeProvider = ({ children }: { children: React.ReactNode }) => {
         resumeData,
         updateResumeData,
         resetData,
+        activeEditTab,
+        setActiveEditTab,
         pdf: {
           ref: contentRef,
           print,

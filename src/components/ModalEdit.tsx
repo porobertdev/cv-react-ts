@@ -85,14 +85,6 @@ export default function ModalEdit<TFormValues extends FieldValues>({
       updateResumeData({ [formKey]: data });
     }
 
-    console.log(
-      '🚀 ~ handleSubmit ~ resumeData:',
-      resumeData,
-      'formKey',
-      formKey,
-      form.control._defaultValues,
-    );
-
     setIsEditing(false);
     setEditIndex(null);
     setIsModalOpen(false);

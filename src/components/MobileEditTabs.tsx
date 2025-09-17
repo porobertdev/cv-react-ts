@@ -30,7 +30,7 @@ export default function MobileEditTabs() {
         <TabsContent value="preview">
           <ResumePreview />
         </TabsContent>
-      </TabsList>
+    </TabsList>
     </Tabs>
   );
 }

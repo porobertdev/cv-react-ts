@@ -1,5 +1,6 @@
 'use-client';
 
+import { useResume } from '@/contexts/ResumeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Briefcase,
@@ -56,13 +57,16 @@ function TabTitle(props: { title: string }) {
 }
 
 export default function ControlPanel() {
+  const { activeEditTab, setActiveEditTab } = useResume();
+
   const isMobile = useIsMobile();
 
   return (
     <Tabs
-      defaultValue="about"
+      defaultValue={activeEditTab}
       orientation="vertical"
       className="w-full"
+      onValueChange={(tab) => setActiveEditTab(tab)}
       //  activationMode='automatic'
     >
       <div className="flex h-screen flex-col gap-4 md:flex-row">
