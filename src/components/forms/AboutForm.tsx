@@ -52,7 +52,7 @@ export default function AboutForm() {
                 </FormLabel>
                 <div className="flex items-center justify-center gap-4">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={fileSrc} />
+                    <AvatarImage src={fileSrc} className="w-full" />
                     <AvatarFallback className="bg-muted-foreground flex w-full items-center justify-center text-white">
                       Pic
                     </AvatarFallback>
