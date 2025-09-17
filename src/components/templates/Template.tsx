@@ -19,7 +19,7 @@ export default function Template({ name }: Template) {
 
   return (
     <ScrollArea>
-      <div className="mr-4 h-[5rem] origin-top scale-95">
+      <div className="mr-4 origin-top scale-50 md:h-[5rem] md:scale-95">
         <div className="p-0.5 shadow-2xl">
           <div ref={pdf.ref}>
             <style>

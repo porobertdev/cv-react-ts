@@ -1,4 +1,6 @@
 import { useResume } from '@/contexts/ResumeContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import { DownloadIcon, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -6,33 +8,50 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export default function ActionPanel() {
   const { pdf, resetData } = useResume();
+  const isMobile = useIsMobile();
 
   return (
-    <Card className="mb-8 p-2">
-      <CardContent className="flex flex-col gap-4 p-0">
+    <Card className="p-2 md:mb-8 md:flex">
+      <CardContent className="flex gap-4 p-0 md:flex-col">
         <Button
           variant="secondary"
-          className="h-10 w-10 cursor-pointer rounded-full"
+          className="h-12 w-12 cursor-pointer rounded-full md:h-10 md:w-10"
           onClick={() => pdf.print()}
         >
-          <Tooltip>
-            <TooltipTrigger>
-              <DownloadIcon />
-            </TooltipTrigger>
-            <TooltipContent className="mb-4">
-              <p>Download</p>
-            </TooltipContent>
-          </Tooltip>
+          {/* don't show tooltip on mobile */}
+          {!isMobile ? (
+            <Tooltip>
+              <TooltipTrigger>
+                <DownloadIcon className={cn(isMobile && 'h-full! w-full!')} />
+              </TooltipTrigger>
+              <TooltipContent className="mb-4">
+                <p>Download</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <DownloadIcon className={cn(isMobile && 'h-full! w-full!')} />
+          )}
         </Button>
-        <Button variant="secondary" className="h-10 w-10 rounded-full" onClick={() => resetData()}>
-          <Tooltip>
-            <TooltipTrigger>
-              <RotateCcw />
-            </TooltipTrigger>
-            <TooltipContent className="mb-4">
-              <p>Reset resume data</p>
-            </TooltipContent>
-          </Tooltip>
+
+        <Button
+          variant="secondary"
+          className="h-12 w-12 rounded-full md:h-10 md:w-10"
+          onClick={() => resetData()}
+        >
+          {/* don't show tooltip on mobile */}
+
+          {!isMobile ? (
+            <Tooltip>
+              <TooltipTrigger>
+                <RotateCcw className={cn(isMobile && 'h-full! w-full!')} />
+              </TooltipTrigger>
+              <TooltipContent className="mb-4">
+                <p>Reset resume data</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <RotateCcw className={cn(isMobile && 'h-full! w-full!')} />
+          )}
         </Button>
       </CardContent>
     </Card>

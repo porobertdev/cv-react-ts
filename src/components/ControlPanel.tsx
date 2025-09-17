@@ -1,5 +1,6 @@
 'use-client';
 
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Briefcase,
   FolderGit2,
@@ -36,6 +37,7 @@ const tabItems = [
     ),
   },
   { value: 'contact', label: 'Contact', icon: <Mail className="!h-full !w-full" /> },
+
   { value: 'experience', label: 'Experience', icon: <Briefcase className="!h-full !w-full" /> },
   { value: 'education', label: 'Education', icon: <GraduationCap className="!h-full !w-full" /> },
   { value: 'skills', label: 'Skills', icon: <Sparkles className="!h-full !w-full" /> },
@@ -54,35 +56,19 @@ function TabTitle(props: { title: string }) {
 }
 
 export default function ControlPanel() {
+  const isMobile = useIsMobile();
+
   return (
-    /*     <Sidebar
-    className=' px-4'
+    <Tabs
+      defaultValue="about"
+      orientation="vertical"
+      className="w-full"
+      //  activationMode='automatic'
     >
-      <SidebarHeader title="Sidebar Title" />
-      <SidebarContent>
-        <AboutForm />
-      </SidebarContent>
-    </Sidebar> */
-    <>
-      {/*    <Card className="p-2 mb-8">
-        <CardContent className="p-0">
-          <Button
-            // variant='secondary'
-            className="w-10 h-10 "
-          >
-            <DownloadIcon />
-          </Button>
-        </CardContent>
-      </Card> */}
-      <Tabs
-        defaultValue="about"
-        orientation="vertical"
-        className="w-full"
-        //  activationMode='automatic'
-      >
-        <div className="flex h-screen gap-4">
+      <div className="flex h-screen flex-col gap-4 md:flex-row">
+        {!isMobile && (
           <div className="flex flex-col gap-4">
-            <TabsList className="h-max flex-col justify-center gap-6 bg-white px-2 py-2 shadow-sm">
+            <TabsList className="h-max w-full justify-center gap-2 bg-white px-2 py-2 shadow-sm md:flex-col md:gap-6">
               {tabItems.map(({ value, label, icon }) => (
                 <TabsTrigger
                   key={value}
@@ -100,52 +86,66 @@ export default function ControlPanel() {
             </TabsList>
             <ActionPanel />
           </div>
+        )}
 
-          {/* TAB CONTENT */}
-          <Card className="w-full">
-            {/* <CardHeader>
+        {/* TAB CONTENT */}
+        <Card className="h-screen w-full text-left">
+          {/* <CardHeader>
           </CardHeader> */}
-            <ScrollArea>
-              <CardContent className="h-[30rem]">
-                <TabsContent value="about">
-                  <TabTitle title="About" />
-                  <AboutForm />
-                </TabsContent>
+          <ScrollArea>
+            <CardContent className="h-[30rem]">
+              <TabsContent value="about">
+                <TabTitle title="About" />
+                <AboutForm />
+              </TabsContent>
 
-                <TabsContent value="contact">
-                  <TabTitle title="Contact" />
-                  <ContactForm />
-                </TabsContent>
+              <TabsContent value="contact">
+                <TabTitle title="Contact" />
+                <ContactForm />
+              </TabsContent>
 
-                <TabsContent value="experience">
-                  <TabTitle title="Experience" />
-                  <ExperienceForm />
-                </TabsContent>
+              <TabsContent value="experience">
+                <TabTitle title="Experience" />
+                <ExperienceForm />
+              </TabsContent>
 
-                <TabsContent value="education">
-                  <TabTitle title="Education" />
-                  <EducationForm />
-                </TabsContent>
+              <TabsContent value="education">
+                <TabTitle title="Education" />
+                <EducationForm />
+              </TabsContent>
 
-                <TabsContent value="skills">
-                  <TabTitle title="Skills" />
-                  <SkillsForm />
-                </TabsContent>
+              <TabsContent value="skills">
+                <TabTitle title="Skills" />
+                <SkillsForm />
+              </TabsContent>
 
-                <TabsContent value="projects">
-                  <TabTitle title="Projects" />
-                  <ProjectsForm />
-                </TabsContent>
+              <TabsContent value="projects">
+                <TabTitle title="Projects" />
+                <ProjectsForm />
+              </TabsContent>
 
-                <TabsContent value="settings">
-                  <TabTitle title="Settings" />
-                  <SettingsForm />
-                </TabsContent>
-              </CardContent>
-            </ScrollArea>
-          </Card>
+              <TabsContent value="settings">
+                <TabTitle title="Settings" />
+                <SettingsForm />
+              </TabsContent>
+            </CardContent>
+          </ScrollArea>
+        </Card>
+
+        <div className="fixed bottom-0 flex w-full flex-col gap-4 md:hidden">
+          <TabsList className="h-max w-full justify-center gap-2 bg-white px-2 py-2 shadow-sm md:flex-col md:gap-6">
+            {tabItems.map(({ value, icon }) => (
+              <TabsTrigger
+                key={value}
+                className="hover:bg-primary hover:text-accent data-[state=active]:bg-primary! data-[state=active]:text-accent! h-10 w-10 rounded-full p-2 transition-all duration-200 hover:scale-110"
+                value={value}
+              >
+                {icon}
+              </TabsTrigger>
+            ))}
+          </TabsList>
         </div>
-      </Tabs>
-    </>
+      </div>
+    </Tabs>
   );
 }
