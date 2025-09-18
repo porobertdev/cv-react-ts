@@ -97,7 +97,7 @@ export default function ControlPanel() {
           {/* <CardHeader>
           </CardHeader> */}
           <ScrollArea>
-            <CardContent className="h-[30rem]">
+            <CardContent className="h-[45rem]">
               <TabsContent value="about">
                 <TabTitle title="About" />
                 <AboutForm />

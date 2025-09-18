@@ -11,8 +11,8 @@ export default function ActionPanel() {
   const isMobile = useIsMobile();
 
   return (
-    <Card className="p-2 md:mb-8 md:flex">
-      <CardContent className="flex gap-4 p-0 md:flex-col">
+    <Card className="p-2 md:mb-8 md:flex  m-auto w-full md:m-0">
+      <CardContent className="flex justify-center gap-4 p-0 md:flex-col">
         <Button
           variant="secondary"
           className="h-12 w-12 cursor-pointer rounded-full md:h-10 md:w-10"

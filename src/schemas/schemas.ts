@@ -12,6 +12,7 @@ export const PlatformEnum = z.enum([
 export const SkillLevelEnum = z.enum(['Beginner', 'Intermediate', 'Advanced', 'Expert']);
 export const SkillTypeEnum = z.enum(['Technical', 'Soft', 'Language', 'Other']);
 export const TemplateEnum = z.enum(['default', 'classic']);
+export const ProjectTypeEnum = z.enum(['FullStack', 'Frontend', 'Backend']);
 
 export const AboutSchema = z.object({
   profilePic: z
@@ -98,7 +99,7 @@ export const ProjectSchema = z.object({
     live: z.string().url().optional(),
     git: z.string().url().optional(),
   }),
-  type: z.enum(['FullStack', 'Frontend', 'Backend']).optional(),
+  type: ProjectTypeEnum.optional(),
   technologies: z.array(z.string().min(1).max(50)).optional(),
 });
 

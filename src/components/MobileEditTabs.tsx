@@ -8,18 +8,17 @@ export default function MobileEditTabs() {
   return (
     <Tabs defaultValue="edit" orientation="horizontal" className="fixed top-0 w-full">
       <TabsList className="h-full w-full flex-col gap-4 bg-inherit p-2 md:p-0">
-        <div className="bg-card flex w-full gap-4">
+        <div className="bg-card flex w-full">
           <div className="w-full">
-            <TabsTrigger value="edit" className="w-full">
+            <TabsTrigger value="edit" className="w-full p-2">
               Edit
             </TabsTrigger>
           </div>
           <div className="w-full">
-            <TabsTrigger value="preview" className="w-full">
+            <TabsTrigger value="preview" className="w-full p-2">
               Preview
             </TabsTrigger>
           </div>
-          <ActionPanel />
         </div>
 
         <TabsContent value="edit" className="w-full bg-none">
@@ -27,10 +26,11 @@ export default function MobileEditTabs() {
             <ControlPanel />
           </ModalProvider>
         </TabsContent>
-        <TabsContent value="preview">
-          <ResumePreview />
+        <TabsContent value="preview" className='flex flex-col gap-4'>
+            <ActionPanel />
+            <ResumePreview />
         </TabsContent>
-    </TabsList>
+      </TabsList>
     </Tabs>
   );
 }

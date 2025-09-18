@@ -15,6 +15,7 @@ import {
 } from './ui/alert-dialog';
 import { Button } from './ui/button';
 import { Form } from './ui/form';
+import { Separator } from './ui/separator';
 
 export interface ModalEditProps<TFormValues extends FieldValues> {
   readonly formData: {
@@ -117,11 +118,15 @@ export default function ModalEdit<TFormValues extends FieldValues>({
     <>
       {/* ADD/EDIT MODAL */}
       <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <AlertDialogTrigger asChild>
-          <Button variant="outline" className="cursor-pointer" onClick={handleAdd}>
-            <CirclePlus />
-          </Button>
-        </AlertDialogTrigger>
+        <div className="flex items-center justify-center gap-4">
+          <Separator className="w-1/3!" />
+          <AlertDialogTrigger asChild>
+            <Button variant="default" className="cursor-pointer" onClick={handleAdd}>
+              <CirclePlus />
+            </Button>
+          </AlertDialogTrigger>
+          <Separator className="w-1/3!" />
+        </div>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{isEditing ? 'Edit Job' : 'Add Job'}</AlertDialogTitle>

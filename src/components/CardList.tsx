@@ -10,7 +10,9 @@ export default function CardList(item) {
       onClick={item.onClick}
     >
       <CardHeader className="w-full flex-row justify-between rounded-sm p-0">
-        <CardTitle className="text-md flex items-center">{item.title}</CardTitle>
+        <CardTitle className="text-md text-muted-foreground flex items-center">
+          {item.title}
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex w-full items-center gap-12 p-0 text-sm">
         {item.content}
