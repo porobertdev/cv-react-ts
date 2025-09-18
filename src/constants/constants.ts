@@ -108,6 +108,7 @@ const DEFAULT_RESUME_DATA: ResumeType = {
         live: 'https://janedoe.dev',
         git: 'https://github.com/janedoe/myportfolio',
       },
+      type: 'Frontend',
       technologies: ['Next.js', 'Tailwind CSS', 'TypeScript', 'Vercel'],
     },
     {
@@ -118,6 +119,7 @@ const DEFAULT_RESUME_DATA: ResumeType = {
         live: 'https://taskzen.app',
         git: 'https://github.com/janedoe/taskzen',
       },
+      type: 'FullStack',
       technologies: ['React', 'Redux', 'Firebase', 'Framer Motion'],
     },
   ],

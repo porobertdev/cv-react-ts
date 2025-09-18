@@ -9,7 +9,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useModalEdit } from '@/contexts/ModalContext';
 import { useResume } from '@/contexts/ResumeContext';
-import { ProjectSchema, type ProjectType } from '@/schemas/schemas';
+import { ProjectSchema, ProjectTypeEnum, type ProjectType } from '@/schemas/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GithubIcon, Globe, PlusCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,13 @@ import { SortableList } from '../SortableList';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
@@ -172,7 +179,9 @@ export default function ProjectsForm() {
                 {...{
                   onClick: () => handleEdit(index, { form, key: 'projects' }),
                   title: project.name,
-                  content: <span className="text-muted-foreground text-xs"></span>,
+                  content: (
+                    <span className="text-muted-foreground text-xs italic">{project.type}</span>
+                  ),
                   // footer: (
                   //   <Button variant="ghost" onClick={() => handleEdit(index)}>
                   //     <Pencil />
@@ -292,6 +301,35 @@ export default function ProjectsForm() {
                 </div>
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* PROJECT TYPE */}
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between">
+                      {field.value || 'Select type'}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuGroup>
+                      {Object.values(ProjectTypeEnum.enum).map((type) => (
+                        <DropdownMenuItem key={type} onSelect={() => field.onChange(type)}>
+                          {type}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </FormControl>
             </FormItem>
           )}
         />
