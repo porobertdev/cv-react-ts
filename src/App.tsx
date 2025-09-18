@@ -10,6 +10,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
 } from './components/ui/alert-dialog';
 import { Button } from './components/ui/button';
 import { SidebarProvider } from './components/ui/sidebar';
@@ -39,6 +40,7 @@ function App() {
         <>
           <MobileEditTabs />
           <AlertDialog open={alertIsOpen}>
+            <AlertDialogTitle>Notice</AlertDialogTitle>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogDescription className="text-lg">
@@ -47,7 +49,7 @@ function App() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <Button size='lg' asChild>
+                <Button size="lg" asChild>
                   <AlertDialogAction onClick={() => setAlertIsOpen(false)}>
                     Continue
                   </AlertDialogAction>
